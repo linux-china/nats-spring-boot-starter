@@ -25,6 +25,10 @@ public class NatsSubscriberAnnotationBeanPostProcessor implements BeanPostProces
     private BeanFactory beanFactory;
     private List<AsyncSubscription> subscriptions = new ArrayList<>();
 
+    public List<AsyncSubscription> getSubscriptions() {
+        return subscriptions;
+    }
+
     @Override
     public int getOrder() {
         return LOWEST_PRECEDENCE;
