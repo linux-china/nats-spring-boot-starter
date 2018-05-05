@@ -43,9 +43,10 @@ nats.url = nats://localhost:4222
 }
 ```
 
-### Beans by nats-spring-boot-start-httpclient
+### Beans by nats-spring-boot-starter
 
 * io.nats.client.Connection: NATS connection
+* endpoint: http://localhost:8080/nats
 
 
 ### References
