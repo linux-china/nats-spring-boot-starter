@@ -15,12 +15,16 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @EnableConfigurationProperties(NatsProperties.class)
 public class NatsAutoConfiguration {
-
     @Autowired
     private NatsProperties properties;
 
-    @Bean
+    @Bean(destroyMethod = "close")
     public Connection nats() throws Exception {
         return Nats.connect(properties.getUrl());
+    }
+
+    @Bean
+    public NatsSubscriberAnnotationBeanPostProcessor natsSubscriberAnnotationBeanPostProcessor() {
+        return new NatsSubscriberAnnotationBeanPostProcessor();
     }
 }
