@@ -19,6 +19,12 @@ NATS is very simple, why you create a starter?
                  <version>1.0.0-SNAPSHOT</version>
           </dependency>
 ```
+
+* please add setting in application.properties. For cluster, please change url to "nats://host1:4222,nats://host2:4222"
+```
+nats.url = nats://localhost:4222
+```
+
 * in you code, use autowired client to send message
 
 ```
