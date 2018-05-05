@@ -6,7 +6,7 @@ Spring Boot starter for NATS.
 NATS is very simple, why you create a starter?
 
 * Settings easy
-* Spring Boot Kafka like
+* Spring Kafka like
 * Metrics & endpoints
 
 ### How to use
