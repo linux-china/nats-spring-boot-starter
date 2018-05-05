@@ -2,6 +2,7 @@ package org.mvnsearch.spring.boot.nats;
 
 import io.nats.client.AsyncSubscription;
 import io.nats.client.Connection;
+import io.nats.client.MessageHandler;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
@@ -78,13 +79,20 @@ public class NatsSubscriberAnnotationBeanPostProcessor implements BeanPostProces
 
     private void processNatsSubscriber(NatsSubscriber natsSubscriber, Method method, Object bean, String beanName) {
         Connection nats = beanFactory.getBean(Connection.class);
-        AsyncSubscription subscription = nats.subscribe(natsSubscriber.subject(), msg -> {
+        MessageHandler messageHandler = msg -> {
             try {
                 method.invoke(bean, msg);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
-        });
+        };
+        AsyncSubscription subscription;
+        natsSubscriber.queueGroup();
+        if ("".equals(natsSubscriber.queueGroup())) {
+            subscription = nats.subscribe(natsSubscriber.subject(), messageHandler);
+        } else {
+            subscription = nats.subscribe(natsSubscriber.subject(), natsSubscriber.queueGroup(), messageHandler);
+        }
         subscriptions.add(subscription);
     }
 
