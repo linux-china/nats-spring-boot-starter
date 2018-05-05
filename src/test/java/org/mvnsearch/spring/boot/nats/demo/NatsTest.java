@@ -8,8 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.io.IOException;
-
 /**
  * nats test
  *
@@ -27,7 +25,8 @@ public class NatsTest {
     }
 
     @Test
-    public void testPubAndSub() throws IOException {
-
+    public void testPubAndSub() throws Exception {
+        nats.publish("topic.a", "hello".getBytes());
+        Thread.sleep(1000);
     }
 }
