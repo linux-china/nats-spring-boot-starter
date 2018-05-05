@@ -27,4 +27,9 @@ public class NatsAutoConfiguration {
     public NatsSubscriberAnnotationBeanPostProcessor natsSubscriberAnnotationBeanPostProcessor() {
         return new NatsSubscriberAnnotationBeanPostProcessor();
     }
+
+    @Bean
+    public NatsEndpoint natsEndpoint() {
+        return new NatsEndpoint();
+    }
 }
