@@ -1,6 +1,6 @@
 Spring Boot Starter NATS
 ===========================
-Spring Boot starter for NATS.
+Spring Boot 1.x starter for NATS.
 
 ### Why Spring Boot starter for nats
 NATS is very simple, why you create a starter?
@@ -34,7 +34,7 @@ nats.url = nats://localhost:4222
             nats.publish("topic.a","hello".getBytes());
 ```
 
-* @NatsSubscriber
+* @NatsSubscriber annotation
 
 ```
 @NatsSubscriber(subject = "topic.a")
@@ -47,6 +47,7 @@ nats.url = nats://localhost:4222
 
 * io.nats.client.Connection: NATS connection
 * endpoint: http://localhost:8080/nats
+* health indicator
 
 
 ### References
