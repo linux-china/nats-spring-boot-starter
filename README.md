@@ -34,7 +34,7 @@ nats.url = nats://localhost:4222
             nats.publish("topic.a","hello".getBytes());
 ```
 
-* @NatsSubscriber
+* @NatsSubscriber support
 
 ```
 @NatsSubscriber(subject = "topic.a")
@@ -47,6 +47,7 @@ nats.url = nats://localhost:4222
 
 * io.nats.client.Connection: NATS connection
 * endpoint: http://localhost:8080/nats
+* health indicator for NATS
 
 
 ### References
