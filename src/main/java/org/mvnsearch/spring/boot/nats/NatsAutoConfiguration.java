@@ -32,4 +32,9 @@ public class NatsAutoConfiguration {
     public NatsEndpoint natsEndpoint() {
         return new NatsEndpoint();
     }
+
+    @Bean
+    public NatsHealthIndicator natsHealthIndicator() {
+        return new NatsHealthIndicator();
+    }
 }
