@@ -3,7 +3,8 @@ package org.mvnsearch.spring.boot.nats;
 import io.nats.client.Connection;
 import io.nats.client.Subscription;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.actuate.endpoint.AbstractEndpoint;
+import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
+import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,7 +15,8 @@ import java.util.stream.Collectors;
  *
  * @author linux_china
  */
-public class NatsEndpoint extends AbstractEndpoint<Map<String, Object>> {
+@Endpoint(id = "nats")
+public class NatsEndpoint {
     @Autowired
     private NatsProperties properties;
     @Autowired
@@ -22,11 +24,7 @@ public class NatsEndpoint extends AbstractEndpoint<Map<String, Object>> {
     @Autowired
     private NatsSubscriberAnnotationBeanPostProcessor postProcessor;
 
-    public NatsEndpoint() {
-        super("nats");
-    }
-
-    @Override
+    @ReadOperation
     public Map<String, Object> invoke() {
         Map<String, Object> info = new HashMap<>();
         info.put("connected", nats.isConnected());
