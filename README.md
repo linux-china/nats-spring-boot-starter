@@ -5,9 +5,10 @@ Spring Boot 2.0 starter for NATS.  For Spring Boot 1.x, please click https://git
 ### Why Spring Boot starter for nats
 NATS is very simple, why you create a starter?
 
-* Settings easy
-* Spring Kafka like
-* Metrics & endpoints
+* Settings easy: just nats.url
+* Spring Kafka like: @NatsSubscriber
+* Metrics & endpoints: NATS states
+* Health indicator for NATS
 
 ### How to use
 
@@ -46,8 +47,8 @@ nats.url = nats://localhost:4222
 ### Beans by nats-spring-boot-starter
 
 * io.nats.client.Connection: NATS connection
-* endpoint: http://localhost:8080/nats
-* health indicator for NATS
+* endpoint: http://localhost:8080/actuator/nats
+* health indicator for NATS: http://localhost:8080/actuator/health
 
 
 ### References
