@@ -35,7 +35,7 @@ nats.url = nats://localhost:4222
             nats.publish("topic.a","hello".getBytes());
 ```
 
-* @NatsSubscriber support
+* @NatsSubscriber support,  method signature of subscriber  is "(Message)->void"
 
 ```
 @NatsSubscriber(subject = "topic.a")
@@ -55,3 +55,4 @@ nats.url = nats://localhost:4222
 
 * NATS:  https://nats.io/
 * NATS Java client: https://github.com/nats-io/java-nats
+* Method Handles in Java: http://www.baeldung.com/java-method-handles
