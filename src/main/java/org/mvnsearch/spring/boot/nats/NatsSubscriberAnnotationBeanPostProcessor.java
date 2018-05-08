@@ -2,9 +2,11 @@ package org.mvnsearch.spring.boot.nats;
 
 import io.nats.client.AsyncSubscription;
 import io.nats.client.Connection;
+import io.nats.client.Message;
 import io.nats.client.MessageHandler;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.DisposableBean;
@@ -13,6 +15,9 @@ import org.springframework.core.MethodIntrospector;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.AnnotationUtils;
 
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
 import java.lang.reflect.Method;
 import java.util.*;
 
@@ -54,11 +59,15 @@ public class NatsSubscriberAnnotationBeanPostProcessor implements BeanPostProces
                 });
         // Non-empty set of subscribed methods
         if (!annotatedMethods.isEmpty()) {
-            for (Map.Entry<Method, Set<NatsSubscriber>> entry : annotatedMethods.entrySet()) {
-                Method method = entry.getKey();
-                for (NatsSubscriber listener : entry.getValue()) {
-                    processNatsSubscriber(listener, method, bean, beanName);
+            try {
+                for (Map.Entry<Method, Set<NatsSubscriber>> entry : annotatedMethods.entrySet()) {
+                    Method method = entry.getKey();
+                    for (NatsSubscriber listener : entry.getValue()) {
+                        processNatsSubscriber(listener, method, bean, beanName);
+                    }
                 }
+            } catch (Exception e) {
+                throw new BeanCreationException("Failed to construct NATS Subscriber handler", e);
             }
         }
         return bean;
@@ -81,12 +90,15 @@ public class NatsSubscriberAnnotationBeanPostProcessor implements BeanPostProces
         return subscribers;
     }
 
-    private void processNatsSubscriber(NatsSubscriber natsSubscriber, Method method, Object bean, String beanName) {
+    private void processNatsSubscriber(NatsSubscriber natsSubscriber, Method method, Object bean, String beanName) throws NoSuchMethodException, IllegalAccessException {
         Connection nats = beanFactory.getBean(Connection.class);
+        //use method handler instead of reflection for performance
+        MethodHandle methodHandler = getMethodHandler(method);
         MessageHandler messageHandler = msg -> {
             try {
-                method.invoke(bean, msg);
-            } catch (Exception e) {
+                methodHandler.invoke(bean, msg);
+                // method.invoke(bean, msg);
+            } catch (Throwable e) {
                 throw new RuntimeException(e);
             }
         };
@@ -105,5 +117,11 @@ public class NatsSubscriberAnnotationBeanPostProcessor implements BeanPostProces
         for (AsyncSubscription subscription : subscriptions) {
             subscription.close();
         }
+    }
+
+    private MethodHandle getMethodHandler(Method method) throws NoSuchMethodException, IllegalAccessException {
+        MethodHandles.Lookup lookup = MethodHandles.lookup();
+        MethodType mt = MethodType.methodType(void.class, Message.class);
+        return lookup.findVirtual(method.getDeclaringClass(), method.getName(), mt);
     }
 }
