@@ -51,6 +51,15 @@ nats.url = nats://localhost:4222
 * health indicator for NATS: http://localhost:8080/actuator/health
 
 
+# Use Cases for Java Application
+
+* Topic & Queue: of course
+* Cloud Bus: configuration refresh
+* Distribute Local JVM Cache Invalid:  easy now :)
+* Registry: subscribe
+* Request/Reply: message with reply. Spring Boot Application will subscribe topic named with "spring.application.name"
+* Async Event
+
 ### References
 
 * NATS:  https://nats.io/
