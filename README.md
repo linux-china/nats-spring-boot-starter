@@ -51,7 +51,7 @@ nats.url = nats://localhost:4222
 * health indicator for NATS: http://localhost:8080/actuator/health
 
 
-# Use Cases for Java Application
+### Use Cases for Java Application
 
 * Topic & Queue: of course
 * Cloud Bus: configuration refresh
@@ -59,6 +59,16 @@ nats.url = nats://localhost:4222
 * Registry: subscribe
 * Request/Reply: message with reply. Spring Boot Application will subscribe topic named with "spring.application.name"
 * Async Event
+
+### Delay Queue
+
+Get notification after delay expired.  First send the message to special subject with names "delay.15s", "delay.30s", "delay.60s", "delay.300s" with reply subject.
+The delay queue brokers subscribed these subjects and store all the messages in the DelayQueue data structure. The delay broker will poll all delay queues, get expired messages,
+and send them to the reply subject.
+
+
+* Java: https://dzone.com/articles/changing-delay-and-hence-order
+* Golang: https://github.com/dukex/squeue
 
 ### References
 
