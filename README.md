@@ -75,3 +75,4 @@ and send them to the reply subject.
 * NATS:  https://nats.io/
 * NATS Java client: https://github.com/nats-io/java-nats
 * Method Handles in Java: http://www.baeldung.com/java-method-handles
+* nats-operator: manage NATS clusters atop Kubernetes, automating their creation and administration: https://github.com/nats-io/nats-operator
