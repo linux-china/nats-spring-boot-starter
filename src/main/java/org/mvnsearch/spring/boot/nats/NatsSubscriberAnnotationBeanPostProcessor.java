@@ -8,10 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanCreationException;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.BeanFactoryAware;
-import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.*;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.core.MethodIntrospector;
 import org.springframework.core.Ordered;
@@ -28,10 +25,16 @@ import java.util.*;
  *
  * @author linux_china
  */
-public class NatsSubscriberAnnotationBeanPostProcessor implements BeanPostProcessor, Ordered, BeanFactoryAware, DisposableBean {
+public class NatsSubscriberAnnotationBeanPostProcessor implements BeanPostProcessor, Ordered, BeanFactoryAware, InitializingBean, DisposableBean {
     private Logger log = LoggerFactory.getLogger(NatsSubscriberAnnotationBeanPostProcessor.class);
     private BeanFactory beanFactory;
     private Map<NatsSubscriber, Dispatcher> subscriptions = new HashMap<>();
+    private Connection nats;
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        nats = beanFactory.getBean(Connection.class);
+    }
 
     public Map<NatsSubscriber, Dispatcher> getSubscriptions() {
         return subscriptions;
@@ -94,7 +97,6 @@ public class NatsSubscriberAnnotationBeanPostProcessor implements BeanPostProces
     }
 
     private void processNatsSubscriber(NatsSubscriber natsSubscriber, Method method, Object bean, String beanName) throws NoSuchMethodException, IllegalAccessException {
-        Connection nats = beanFactory.getBean(Connection.class);
         //use method handler instead of reflection for performance
         MethodHandle methodHandler = getMethodHandler(method);
         MessageHandler messageHandler = msg -> {
@@ -118,7 +120,6 @@ public class NatsSubscriberAnnotationBeanPostProcessor implements BeanPostProces
 
     @Override
     public void destroy() throws Exception {
-        Connection nats = beanFactory.getBean(Connection.class);
         for (Map.Entry<NatsSubscriber, Dispatcher> entry : subscriptions.entrySet()) {
             Dispatcher dispatcher = entry.getValue();
             NatsSubscriber natsSubscriber = entry.getKey();
