@@ -1,7 +1,6 @@
 package org.mvnsearch.spring.boot.nats;
 
 import io.nats.client.Connection;
-import io.nats.client.Subscription;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
 import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;
@@ -27,10 +26,10 @@ public class NatsEndpoint {
     @ReadOperation
     public Map<String, Object> invoke() {
         Map<String, Object> info = new HashMap<>();
-        info.put("connected", nats.isConnected());
+        info.put("status", nats.getStatus().toString());
         info.put("url", properties.getUrl());
-        info.put("subjects", postProcessor.getSubscriptions().stream().map(Subscription::getSubject).collect(Collectors.toList()));
-        info.put("stats", nats.getStats());
+        info.put("subjects", postProcessor.getSubscriptions().keySet().stream().map(NatsSubscriber::subject).collect(Collectors.toList()));
+        info.put("statistics", nats.getStatistics());
         return info;
     }
 }

@@ -1,9 +1,11 @@
 package org.mvnsearch.spring.boot.nats;
 
-import io.nats.client.AsyncSubscription;
 import io.nats.client.Connection;
+import io.nats.client.Dispatcher;
 import io.nats.client.Message;
 import io.nats.client.MessageHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanCreationException;
@@ -27,10 +29,11 @@ import java.util.*;
  * @author linux_china
  */
 public class NatsSubscriberAnnotationBeanPostProcessor implements BeanPostProcessor, Ordered, BeanFactoryAware, DisposableBean {
+    private Logger log = LoggerFactory.getLogger(NatsSubscriberAnnotationBeanPostProcessor.class);
     private BeanFactory beanFactory;
-    private List<AsyncSubscription> subscriptions = new ArrayList<>();
+    private Map<NatsSubscriber, Dispatcher> subscriptions = new HashMap<>();
 
-    public List<AsyncSubscription> getSubscriptions() {
+    public Map<NatsSubscriber, Dispatcher> getSubscriptions() {
         return subscriptions;
     }
 
@@ -102,21 +105,31 @@ public class NatsSubscriberAnnotationBeanPostProcessor implements BeanPostProces
                 throw new RuntimeException(e);
             }
         };
-        AsyncSubscription subscription;
-        natsSubscriber.queueGroup();
+        Dispatcher dispatcher;
         if ("".equals(natsSubscriber.queueGroup())) {
-            subscription = nats.subscribe(natsSubscriber.subject(), messageHandler);
+            dispatcher = nats.createDispatcher(messageHandler);
+            dispatcher.subscribe(natsSubscriber.subject());
         } else {
-            subscription = nats.subscribe(natsSubscriber.subject(), natsSubscriber.queueGroup(), messageHandler);
+            dispatcher = nats.createDispatcher(messageHandler);
+            dispatcher.subscribe(natsSubscriber.subject(), natsSubscriber.queueGroup());
         }
-        subscriptions.add(subscription);
+        subscriptions.put(natsSubscriber, dispatcher);
     }
 
     @Override
     public void destroy() throws Exception {
-        for (AsyncSubscription subscription : subscriptions) {
-            subscription.close();
+        Connection nats = beanFactory.getBean(Connection.class);
+        for (Map.Entry<NatsSubscriber, Dispatcher> entry : subscriptions.entrySet()) {
+            Dispatcher dispatcher = entry.getValue();
+            NatsSubscriber natsSubscriber = entry.getKey();
+            try {
+                dispatcher.unsubscribe(natsSubscriber.subject());
+                nats.closeDispatcher(dispatcher);
+            } catch (Exception e) {
+                log.error("Failed to close " + natsSubscriber.subject(), e);
+            }
         }
+
     }
 
     private MethodHandle getMethodHandler(Method method) throws NoSuchMethodException, IllegalAccessException {
