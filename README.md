@@ -1,6 +1,6 @@
 Spring Boot Starter NATS
 ===========================
-Spring Boot 2.0 starter for NATS.  For Spring Boot 1.x, please click https://github.com/linux-china/nats-spring-boot-starter/tree/1.x
+Spring Boot 2.0 starter for NATS with new java-nats 2.0 library.  For Spring Boot 1.x, please click https://github.com/linux-china/nats-spring-boot-starter/tree/1.x
 
 ### Why Spring Boot starter for nats
 NATS is very simple, why you create a starter?
