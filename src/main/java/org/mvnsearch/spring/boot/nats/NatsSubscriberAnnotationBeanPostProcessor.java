@@ -13,7 +13,9 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.core.MethodIntrospector;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.AnnotationUtils;
+import reactor.core.publisher.Flux;
 
+import java.lang.annotation.Annotation;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
@@ -25,7 +27,7 @@ import java.util.*;
  *
  * @author linux_china
  */
-public class NatsSubscriberAnnotationBeanPostProcessor implements BeanPostProcessor, Ordered, BeanFactoryAware, InitializingBean, DisposableBean {
+public class NatsSubscriberAnnotationBeanPostProcessor implements NatsReactive, BeanPostProcessor, Ordered, BeanFactoryAware, InitializingBean, DisposableBean {
     private Logger log = LoggerFactory.getLogger(NatsSubscriberAnnotationBeanPostProcessor.class);
     private BeanFactory beanFactory;
     private Map<NatsSubscriber, Dispatcher> subscriptions = new HashMap<>();
@@ -119,6 +121,16 @@ public class NatsSubscriberAnnotationBeanPostProcessor implements BeanPostProces
     }
 
     @Override
+    public Flux<byte[]> subscribe(String subject) {
+        return Flux.create(sink -> {
+            Dispatcher dispatcher = nats.createDispatcher(message -> {
+                sink.next(message.getData());
+            });
+            subscriptions.put(createAnnotation(subject, null), dispatcher);
+        });
+    }
+
+    @Override
     public void destroy() throws Exception {
         for (Map.Entry<NatsSubscriber, Dispatcher> entry : subscriptions.entrySet()) {
             Dispatcher dispatcher = entry.getValue();
@@ -137,5 +149,24 @@ public class NatsSubscriberAnnotationBeanPostProcessor implements BeanPostProces
         MethodHandles.Lookup lookup = MethodHandles.lookup();
         MethodType mt = MethodType.methodType(void.class, Message.class);
         return lookup.findVirtual(method.getDeclaringClass(), method.getName(), mt);
+    }
+
+    public NatsSubscriber createAnnotation(String subject, String queueGroup) {
+        return new NatsSubscriber() {
+            @Override
+            public String subject() {
+                return null;
+            }
+
+            @Override
+            public String queueGroup() {
+                return null;
+            }
+
+            @Override
+            public Class<? extends Annotation> annotationType() {
+                return NatsSubscriber.class;
+            }
+        };
     }
 }
