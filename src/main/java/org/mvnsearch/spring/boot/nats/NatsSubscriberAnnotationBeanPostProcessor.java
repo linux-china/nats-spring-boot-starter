@@ -14,6 +14,7 @@ import org.springframework.core.MethodIntrospector;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.AnnotationUtils;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.lang.annotation.Annotation;
 import java.lang.invoke.MethodHandle;
@@ -21,6 +22,7 @@ import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * NatsSubscriber annotation bean post processor: register subscriber on NATS connection
@@ -118,6 +120,12 @@ public class NatsSubscriberAnnotationBeanPostProcessor implements NatsReactive, 
             dispatcher.subscribe(natsSubscriber.subject(), natsSubscriber.queueGroup());
         }
         subscriptions.put(natsSubscriber, dispatcher);
+    }
+
+    @Override
+    public Mono<Void> publish(String subject, byte[] body) {
+        CompletableFuture<Message> request = nats.request("topic.a", "hello".getBytes());
+        return Mono.fromFuture(request).then();
     }
 
     @Override
