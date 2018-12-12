@@ -1,6 +1,7 @@
 package org.mvnsearch.spring.boot.nats;
 
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 /**
  * NATS interface for subscribe with Reactive support
@@ -9,5 +10,7 @@ import reactor.core.publisher.Flux;
  */
 public interface NatsReactive {
 
-    Flux<byte[]> subscribe(String topic);
+    Mono<Void> publish(String subject, byte[] body);
+
+    Flux<byte[]> subscribe(String subject);
 }
