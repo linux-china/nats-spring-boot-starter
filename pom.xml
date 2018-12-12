@@ -14,9 +14,10 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
-        <spring-boot.version>2.1.0.RELEASE</spring-boot.version>
-        <kotlin.version>1.3.10</kotlin.version>
+        <spring-boot.version>2.1.1.RELEASE</spring-boot.version>
+        <kotlin.version>1.3.11</kotlin.version>
         <jnats.version>2.3.0</jnats.version>
+        <reactor-bom.version>Californium-SR3</reactor-bom.version>
     </properties>
 
     <developers>
@@ -43,8 +44,8 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <groupId>io.projectreactor</groupId>
+            <artifactId>reactor-core</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -77,6 +78,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -150,6 +156,13 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
                 <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.projectreactor</groupId>
+                <artifactId>reactor-bom</artifactId>
+                <version>${reactor-bom.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
