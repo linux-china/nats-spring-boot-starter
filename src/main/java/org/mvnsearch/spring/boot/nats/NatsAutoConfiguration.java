@@ -2,6 +2,7 @@ package org.mvnsearch.spring.boot.nats;
 
 import io.nats.client.Connection;
 import io.nats.client.Nats;
+import io.nats.client.Options;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -20,7 +21,9 @@ public class NatsAutoConfiguration {
 
     @Bean(destroyMethod = "close")
     public Connection nats() throws Exception {
-        return Nats.connect(properties.getUrl());
+        Options.Builder builder = new Options.Builder();
+        builder.server(properties.getUrl()).token(properties.getToken());
+        return Nats.connect(builder.build());
     }
 
     @Bean
