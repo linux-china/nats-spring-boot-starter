@@ -16,9 +16,13 @@ public class NatsProperties {
      */
     private String url = "nats://localhost:4222";
     /**
-     * jwt token to connect NATS
+     * jwt token
      */
-    private String token;
+    private String jwtToken;
+    /**
+     * nkey token
+     */
+    private String nkeyToken;
 
     public String getUrl() {
         return url;
@@ -28,11 +32,19 @@ public class NatsProperties {
         this.url = url;
     }
 
-    public String getToken() {
-        return token;
+    public String getJwtToken() {
+        return jwtToken;
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public void setJwtToken(String jwtToken) {
+        this.jwtToken = jwtToken;
+    }
+
+    public String getNkeyToken() {
+        return nkeyToken;
+    }
+
+    public void setNkeyToken(String nkeyToken) {
+        this.nkeyToken = nkeyToken;
     }
 }
