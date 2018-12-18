@@ -70,6 +70,35 @@ and send them to the reply subject.
 * Java: https://dzone.com/articles/changing-delay-and-hence-order
 * Golang: https://github.com/dukex/squeue
 
+### NGS integration
+NGS is a global communications system built on NATS.io. NGS is easy to use, secure by default, and globally available in all major cloud providers. https://synadia.com/ngs/
+
+Please add following configuration in your application.properties
+```
+nats.url = tls://connect.ngs.global:4222
+nats.jwt-token= eyJ0eXAiOiJqd3QiLCJhbGciOiJlZDI1NTE5In0.xxxx.yyy
+nats.nkey-token= xxxx
+```
+
+How to get jwt & nkey token?
+
+* run 'ngs account status' to get account name and export with NGS_ACCOUNT
+
+```
+ngs account status
+export NGS_ACCOUNT=ecstatic_bohr0
+```
+
+* jwt token
+```
+cat ~/.ngs/nats/synadia/accounts/${NGS_ACCOUNT}/users/${NGS_ACCOUNT}.jwt
+```
+
+* nkey token
+```
+cat ~/.nkeys/synadia/accounts/${NGS_ACCOUNT}/users/${NGS_ACCOUNT}.nk
+```
+
 ### References
 
 * NATS:  https://nats.io/
