@@ -1,7 +1,5 @@
 package org.mvnsearch.spring.boot.nats.streaming;
 
-import java.util.UUID;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -32,9 +30,19 @@ public class NatsStreamingAutoConfiguration {
 		Options.Builder builder = new Options.Builder();
 		builder.natsConn(nats);
 
-		// TODO implement properties
+		if (properties.getConnectWait() != null) {
+			builder.connectWait(properties.getConnectWait());
+		}
+		
+		if (properties.getAckTimeout() != null) {
+			builder.pubAckWait(properties.getAckTimeout());
+		}
+		
+		if (properties.getMaxPubAcksInFlight() != null ) {
+			builder.maxPubAcksInFlight(properties.getMaxPubAcksInFlight());
+		}
 
-		return NatsStreaming.connect("test-cluster", UUID.randomUUID().toString(), builder.build());
+		return NatsStreaming.connect(properties.getClusterId(), properties.getClientId(), builder.build());
 	}
 
 	@Bean

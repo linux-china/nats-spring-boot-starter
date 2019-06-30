@@ -1,11 +1,11 @@
 package org.mvnsearch.spring.boot.nats.demo;
 
-import io.nats.client.Message;
 import org.mvnsearch.spring.boot.nats.NatsSubscriber;
 import org.mvnsearch.spring.boot.nats.streaming.NatsStreamingSubscriber;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.ComponentScan;
+
+import io.nats.client.Message;
 
 /**
  * NATS demo application
@@ -13,7 +13,6 @@ import org.springframework.context.annotation.ComponentScan;
  * @author linux_china
  */
 @SpringBootApplication
-@ComponentScan("org.mvnsearch.spring.boot.nats")
 public class NatsDemoApplication {
 
     public static void main(String[] args) {
