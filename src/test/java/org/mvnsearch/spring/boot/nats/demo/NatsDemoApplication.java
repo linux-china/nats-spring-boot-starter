@@ -23,9 +23,9 @@ public class NatsDemoApplication {
     public void handler(Message msg) {
         System.out.println(msg.getSubject());
     }
-    
-    @NatsStreamingSubscriber(subject = "topic.b")
+
+    @NatsStreamingSubscriber(subject = "topic.b", durableName = "test_durable")
     public void streamingHandler(io.nats.streaming.Message msg) {
-    	System.out.println(msg.getSubject());
+        System.out.println(msg.getSubject());
     }
 }

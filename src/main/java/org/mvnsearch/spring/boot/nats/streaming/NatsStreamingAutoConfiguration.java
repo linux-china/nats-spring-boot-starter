@@ -19,41 +19,40 @@ import io.nats.streaming.StreamingConnection;
 @EnableConfigurationProperties(NatsStreamingProperties.class)
 public class NatsStreamingAutoConfiguration {
 
-	@Autowired
-	private NatsStreamingProperties properties;
+    @Autowired
+    private NatsStreamingProperties properties;
 
-	@Autowired
-	private Connection nats;
+    @Autowired
+    private Connection nats;
 
-	@Bean(destroyMethod = "close")
-	public StreamingConnection natsStreaming() throws Exception {
-		Options.Builder builder = new Options.Builder();
-		builder.natsConn(nats);
+    @Bean(destroyMethod = "close")
+    public StreamingConnection natsStreaming() throws Exception {
+        Options.Builder builder = new Options.Builder();
+        builder.natsConn(this.nats);
 
-		if (properties.getConnectWait() != null) {
-			builder.connectWait(properties.getConnectWait());
-		}
-		
-		if (properties.getAckTimeout() != null) {
-			builder.pubAckWait(properties.getAckTimeout());
-		}
-		
-		if (properties.getMaxPubAcksInFlight() != null ) {
-			builder.maxPubAcksInFlight(properties.getMaxPubAcksInFlight());
-		}
+        if (this.properties.getConnectWait() != null) {
+            builder.connectWait(this.properties.getConnectWait());
+        }
 
-		return NatsStreaming.connect(properties.getClusterId(), properties.getClientId(), builder.build());
-	}
+        if (this.properties.getAckTimeout() != null) {
+            builder.pubAckWait(this.properties.getAckTimeout());
+        }
 
-	@Bean
-	public NatsStreamingSubscriberAnnotationBeanPostProcessor natsStreamingSubscriberAnnotationBeanPostProcessor() {
-		return new NatsStreamingSubscriberAnnotationBeanPostProcessor();
-	}
+        if (this.properties.getMaxPubAcksInFlight() != null) {
+            builder.maxPubAcksInFlight(this.properties.getMaxPubAcksInFlight());
+        }
 
-	/*
-	 * @Bean public NatsEndpoint natsEndpoint() { return new NatsEndpoint(); }
-	 * 
-	 * @Bean public NatsHealthIndicator natsHealthIndicator() { return new
-	 * NatsHealthIndicator(); }
-	 */
+        return NatsStreaming.connect(this.properties.getClusterId(), this.properties.getClientId(), builder.build());
+    }
+
+    @Bean
+    public NatsStreamingSubscriberAnnotationBeanPostProcessor natsStreamingSubscriberAnnotationBeanPostProcessor() {
+        return new NatsStreamingSubscriberAnnotationBeanPostProcessor();
+    }
+
+    @Bean
+    public NatsStreamingEndpoint natsStreamingEndpoint() {
+        return new NatsStreamingEndpoint();
+    }
+
 }

@@ -1,15 +1,20 @@
 package org.mvnsearch.spring.boot.nats.streaming;
 
-import java.lang.annotation.*;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * NATS subscribers annotation for repeat
+ * NATS Streaming subscribers annotation for repeat
  *
- * @author linux_china
+ * @author wisni
  */
-@Target({ElementType.METHOD})
+@Target({ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface NatsStreamingSubscribers {
+
     NatsStreamingSubscriber[] value();
 }

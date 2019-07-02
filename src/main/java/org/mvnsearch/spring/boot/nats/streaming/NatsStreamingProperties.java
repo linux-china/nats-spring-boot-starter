@@ -12,49 +12,65 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "nats.streaming")
 public class NatsStreamingProperties {
 
-	private String clusterId;
-	private String clientId;
-	private Duration connectWait;
-	private Duration ackTimeout;
-	private Integer maxPubAcksInFlight;
+    private String clusterId;
+    private String clientId;
+    private boolean clientIdAutoGeneration;
+    private Duration connectWait;
+    private Duration ackTimeout;
+    private Integer maxPubAcksInFlight;
 
-	public String getClusterId() {
-		return clusterId;
-	}
+    private String generatedClientId;
 
-	public void setClusterId(String clusterId) {
-		this.clusterId = clusterId;
-	}
+    public String getClusterId() {
+        return this.clusterId;
+    }
 
-	public String getClientId() {
-		return clientId;
-	}
+    public void setClusterId(String clusterId) {
+        this.clusterId = clusterId;
+    }
 
-	public void setClientId(String clientId) {
-		this.clientId = clientId;
-	}
-	
-	public Duration getConnectWait() {
-		return connectWait;
-	}
+    public String getClientId() {
+        if (this.clientIdAutoGeneration && this.generatedClientId == null) {
+            this.generatedClientId = this.clientId.concat("_").concat(NatsStreamingClientIdGenerator.getId());
+            this.clientId = this.generatedClientId;
+        }
 
-	public void setConnectWait(Duration connectWait) {
-		this.connectWait = connectWait;
-	}
+        return this.clientId;
+    }
 
-	public Duration getAckTimeout() {
-		return ackTimeout;
-	}
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
+    }
 
-	public void setAckTimeout(Duration ackTimeout) {
-		this.ackTimeout = ackTimeout;
-	}
+    public boolean isClientIdAutoGeneration() {
+        return this.clientIdAutoGeneration;
+    }
 
-	public Integer getMaxPubAcksInFlight() {
-		return maxPubAcksInFlight;
-	}
+    public void setClientIdAutoGeneration(boolean clientIdAutoGeneration) {
+        this.clientIdAutoGeneration = clientIdAutoGeneration;
+    }
 
-	public void setMaxPubAcksInFlight(Integer maxPubAcksInFlight) {
-		this.maxPubAcksInFlight = maxPubAcksInFlight;
-	}
+    public Duration getConnectWait() {
+        return this.connectWait;
+    }
+
+    public void setConnectWait(Duration connectWait) {
+        this.connectWait = connectWait;
+    }
+
+    public Duration getAckTimeout() {
+        return this.ackTimeout;
+    }
+
+    public void setAckTimeout(Duration ackTimeout) {
+        this.ackTimeout = ackTimeout;
+    }
+
+    public Integer getMaxPubAcksInFlight() {
+        return this.maxPubAcksInFlight;
+    }
+
+    public void setMaxPubAcksInFlight(Integer maxPubAcksInFlight) {
+        this.maxPubAcksInFlight = maxPubAcksInFlight;
+    }
 }
