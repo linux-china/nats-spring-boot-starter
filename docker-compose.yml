@@ -1,7 +1,8 @@
 version: "3"
 services:
   nats:
-    image: nats-streaming:0.14.1
+    image: nats:1.4.1
+    #image: nats-streaming:0.14.1
     ports:
       - "4222:4222"
       - "6222:6222"
