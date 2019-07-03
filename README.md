@@ -6,7 +6,7 @@ Spring Boot 2.0 starter for NATS with new java-nats 2.0 library.  For Spring Boo
 NATS is very simple, why you create a starter?
 
 * Settings easy: just nats.url
-* Spring Kafka like: @NatsSubscriber
+* Spring Kafka like: @NatsSubscriber, @NatsStreamingSubscriber
 * Metrics & endpoints: NATS states
 * Health indicator for NATS
 
@@ -26,7 +26,7 @@ NATS is very simple, why you create a starter?
 nats.url = nats://localhost:4222
 ```
 
-* in you code, use autowired client to send message
+* in your code, use autowired client to send message
 
 ```
             @Autowired
@@ -35,7 +35,7 @@ nats.url = nats://localhost:4222
             nats.publish("topic.a","hello".getBytes());
 ```
 
-* @NatsSubscriber support,  method signature of subscriber  is "(Message)->void"
+* @NatsSubscriber support, method signature of subscriber is "(Message)->void"
 
 ```
 @NatsSubscriber(subject = "topic.a")
@@ -44,10 +44,39 @@ nats.url = nats://localhost:4222
 }
 ```
 
+### NATS Streaming
+
+* if you are using [NATS Streaming Server](https://nats.io/download/nats-io/nats-streaming-server/), please add setting in application.properties
+```
+...
+nats.streaming.clusterId=test-cluster
+nats.streaming.clientId=test-client
+```
+
+* in your code, use autowired client to send message
+
+```
+            @Autowired
+            private StreamingConnection natsStreaming;
+            ...
+            natsStreaming.publish("topic.b", "hello streaming".getBytes());
+```
+
+* @NatsStreamingSubscriber support, method signature of subscriber is "(Message)->void"
+
+```
+    @NatsStreamingSubscriber(subject = "topic.b", durableName = "test_durable")
+    public void streamingHandler(io.nats.streaming.Message msg) {
+        System.out.println(msg.getSubject());
+    }
+``` 
+
 ### Beans by nats-spring-boot-starter
 
 * io.nats.client.Connection: NATS connection
+* io.nats.streaming.StreamingConnection: NATS Streaming connection
 * endpoint: http://localhost:8080/actuator/nats
+* endpoint: http://localhost:8080/actuator/streaming
 * health indicator for NATS: http://localhost:8080/actuator/health
 
 
