@@ -1,9 +1,11 @@
 package org.mvnsearch.spring.boot.nats.demo;
 
-import io.nats.client.Message;
 import org.mvnsearch.spring.boot.nats.NatsSubscriber;
+import org.mvnsearch.spring.boot.nats.streaming.NatsStreamingSubscriber;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+import io.nats.client.Message;
 
 /**
  * NATS demo application
@@ -19,6 +21,11 @@ public class NatsDemoApplication {
 
     @NatsSubscriber(subject = "topic.a")
     public void handler(Message msg) {
+        System.out.println(msg.getSubject());
+    }
+
+    @NatsStreamingSubscriber(subject = "topic.b", durableName = "test_durable")
+    public void streamingHandler(io.nats.streaming.Message msg) {
         System.out.println(msg.getSubject());
     }
 }
