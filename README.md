@@ -49,6 +49,7 @@ nats.url = nats://localhost:4222
 * if you are using [NATS Streaming Server](https://nats.io/download/nats-io/nats-streaming-server/), please add setting in application.properties
 ```
 ...
+nats.streaming.enable=true
 nats.streaming.clusterId=test-cluster
 nats.streaming.clientId=test-client
 ```

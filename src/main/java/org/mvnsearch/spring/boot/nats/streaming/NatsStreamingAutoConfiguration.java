@@ -1,6 +1,7 @@
 package org.mvnsearch.spring.boot.nats.streaming;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +17,10 @@ import io.nats.streaming.StreamingConnection;
  * @author wisni
  */
 @Configuration
+@ConditionalOnProperty(
+    prefix = "nats.streaming",
+    value = "enable",
+    matchIfMissing = false)
 @EnableConfigurationProperties(NatsStreamingProperties.class)
 public class NatsStreamingAutoConfiguration {
 
