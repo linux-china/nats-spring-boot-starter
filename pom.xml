@@ -14,10 +14,10 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
-        <spring-boot.version>2.1.9.RELEASE</spring-boot.version>
-        <kotlin.version>1.3.50</kotlin.version>
-        <jnats.version>2.6.5</jnats.version>
-        <reactor-bom.version>Californium-SR12</reactor-bom.version>
+        <spring-boot.version>2.2.4.RELEASE</spring-boot.version>
+        <kotlin.version>1.3.61</kotlin.version>
+        <jnats.version>2.6.6</jnats.version>
+        <reactor-bom.version>Dysprosium-SR4</reactor-bom.version>
     </properties>
 
     <developers>
