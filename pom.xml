@@ -14,10 +14,10 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
-        <spring-boot.version>2.2.4.RELEASE</spring-boot.version>
-        <kotlin.version>1.3.61</kotlin.version>
-        <jnats.version>2.6.6</jnats.version>
-        <reactor-bom.version>Dysprosium-SR4</reactor-bom.version>
+        <spring-boot.version>2.2.7.RELEASE</spring-boot.version>
+        <kotlin.version>1.3.72</kotlin.version>
+        <jnats.version>2.6.7</jnats.version>
+        <reactor-bom.version>Dysprosium-SR7</reactor-bom.version>
     </properties>
 
     <developers>
@@ -89,7 +89,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.0</version>
+                <version>3.8.1</version>
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
