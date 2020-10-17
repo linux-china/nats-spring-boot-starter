@@ -106,3 +106,4 @@ cat ~/.nkeys/synadia/accounts/${NGS_ACCOUNT}/users/${NGS_ACCOUNT}.nk
 * NATS Java client: https://github.com/nats-io/java-nats
 * Method Handles in Java: http://www.baeldung.com/java-method-handles
 * nats-operator: manage NATS clusters atop Kubernetes, automating their creation and administration: https://github.com/nats-io/nats-operator
+* Contrasting NATS with Apache Kafk: https://itnext.io/contrasting-nats-with-apache-kafka-1d3bdb9aa767
