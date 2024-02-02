@@ -1,7 +1,7 @@
 package org.mvnsearch.spring.boot.nats.demo;
 
 import io.nats.client.Message;
-import org.mvnsearch.spring.boot.nats.NatsSubscriber;
+import org.mvnsearch.spring.boot.nats.annotation.NatsSubscriber;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -13,12 +13,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class NatsDemoApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(NatsDemoApplication.class, args);
-    }
+  public static void main(String[] args) {
+    SpringApplication.run(NatsDemoApplication.class, args);
+  }
 
-    @NatsSubscriber(subject = "topic.a")
-    public void handler(Message msg) {
-        System.out.println(msg.getSubject());
-    }
+  @NatsSubscriber(subject = "subject1")
+  public void handler(Message msg) {
+    System.out.println(msg.getSubject());
+  }
 }
