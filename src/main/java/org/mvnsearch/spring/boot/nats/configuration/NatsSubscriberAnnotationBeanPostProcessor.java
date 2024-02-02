@@ -1,9 +1,12 @@
-package org.mvnsearch.spring.boot.nats;
+package org.mvnsearch.spring.boot.nats.configuration;
 
 import io.nats.client.Connection;
 import io.nats.client.Dispatcher;
 import io.nats.client.Message;
 import io.nats.client.MessageHandler;
+import org.mvnsearch.spring.boot.nats.NatsReactive;
+import org.mvnsearch.spring.boot.nats.annotation.NatsSubscriber;
+import org.mvnsearch.spring.boot.nats.annotation.NatsSubscribers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.support.AopUtils;
@@ -30,7 +33,7 @@ import java.util.concurrent.CompletableFuture;
  * @author linux_china
  */
 public class NatsSubscriberAnnotationBeanPostProcessor implements NatsReactive, BeanPostProcessor, Ordered, BeanFactoryAware, InitializingBean, DisposableBean {
-    private Logger log = LoggerFactory.getLogger(NatsSubscriberAnnotationBeanPostProcessor.class);
+    private static final Logger log = LoggerFactory.getLogger(NatsSubscriberAnnotationBeanPostProcessor.class);
     private BeanFactory beanFactory;
     private Map<NatsSubscriber, Dispatcher> subscriptions = new HashMap<>();
     private Connection nats;
