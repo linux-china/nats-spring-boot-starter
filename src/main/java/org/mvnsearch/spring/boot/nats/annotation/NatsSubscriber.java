@@ -1,5 +1,7 @@
-package org.mvnsearch.spring.boot.nats;
+package org.mvnsearch.spring.boot.nats.annotation;
 
+
+import org.mvnsearch.spring.boot.nats.annotation.NatsSubscribers;
 
 import java.lang.annotation.*;
 

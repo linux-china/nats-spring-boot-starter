@@ -1,4 +1,4 @@
-package org.mvnsearch.spring.boot.nats;
+package org.mvnsearch.spring.boot.nats.annotation;
 
 import java.lang.annotation.*;
 
