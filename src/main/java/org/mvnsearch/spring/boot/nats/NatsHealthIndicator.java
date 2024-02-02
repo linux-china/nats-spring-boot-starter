@@ -12,13 +12,13 @@ import org.springframework.boot.actuate.health.Health;
  */
 public class NatsHealthIndicator extends AbstractHealthIndicator {
     @Autowired
-    private Connection nats;
+    private Connection nc;
 
     @Override
     protected void doHealthCheck(Health.Builder builder) throws Exception {
         try {
-            Connection.Status status = nats.getStatus();
-            builder.up().withDetail("url", nats.getConnectedUrl()).withDetail("status", status.toString());
+            Connection.Status status = nc.getStatus();
+            builder.up().withDetail("url", nc.getConnectedUrl()).withDetail("status", status.toString());
         } catch (Exception e) {
             builder.down(e);
         }
