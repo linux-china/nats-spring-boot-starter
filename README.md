@@ -90,7 +90,7 @@ public interface NatsReactive {
     Mono<Void> publish(String subject, byte[] body);
 
     Flux<byte[]> subscribe(String subject);
-} 
+}
 ```
 
 # NATS MicroServices framework
@@ -197,6 +197,12 @@ Then call `nats kv put bucket online.admin '{"nick": "linux_china", "phone":"138
 * Metadata: Data Schema, such as avro, protobuf, json schema etc under `schema-registry` bucket.
 * State data: cooperate with instances, such as rate limit, black list etc.
 * Statics Data: some data for report
+
+# Spring Cloud Stream Binder for NATS
+
+Please official Spring Cloud Stream Binder for NATS [nats-spring-cloud-stream-binder](https://github.com/nats-io/spring-nats).
+
+**Tips**: nats-spring-boot-starter is based on spring-nats, and you can use both of them in your project.
 
 # References
 
