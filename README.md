@@ -210,4 +210,5 @@ Please official Spring Cloud Stream Binder for NATS [nats-spring-cloud-stream-bi
 * NATS Docs: https://nats-io.github.io/docs/
 * NATS Architecture and Design Docs: https://github.com/nats-io/nats-architecture-and-design
 * NATS Java client: https://github.com/nats-io/java-nats
+* spring-nats: https://github.com/nats-io/spring-nats
 * Method Handles in Java: http://www.baeldung.com/java-method-handles
