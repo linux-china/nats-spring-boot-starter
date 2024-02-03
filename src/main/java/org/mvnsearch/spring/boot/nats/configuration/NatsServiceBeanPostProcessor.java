@@ -4,6 +4,7 @@ import io.nats.client.Connection;
 import io.nats.service.*;
 import org.mvnsearch.spring.boot.nats.NatsContextAware;
 import org.mvnsearch.spring.boot.nats.annotation.NatsService;
+import org.mvnsearch.spring.boot.nats.serialization.SerializationUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -103,15 +104,10 @@ public class NatsServiceBeanPostProcessor implements BeanPostProcessor, Disposab
                                 if (paramType == String.class) {
                                     param = new String(msg.getData(), StandardCharsets.UTF_8);
                                 } else if (paramType != ServiceMessage.class) {
-                                    String textBody = new String(msg.getData(), StandardCharsets.UTF_8);
-                                    param = JsonUtil.convert(textBody, paramType);
+                                    param = SerializationUtil.convert(msg.getData(), paramType);
                                 }
                                 Object result = ReflectionUtils.invokeMethod(method, bean, param);
-                                if (result instanceof String) {
-                                    msg.respond(nc, (String) result);
-                                } else {
-                                    msg.respond(nc, JsonUtil.toJson(result));
-                                }
+                                msg.respond(nc, SerializationUtil.toBytes(result));
                             } catch (Exception e) {
                                 String fullName = clazz.getCanonicalName() + "." + method.getName();
                                 logger.error("NATS-001500: failed to call NATS service: " + fullName, e);

@@ -4,6 +4,7 @@ import io.nats.client.Connection;
 import io.nats.client.Message;
 import org.mvnsearch.spring.boot.nats.annotation.MessagingExchange;
 import org.mvnsearch.spring.boot.nats.annotation.ServiceExchange;
+import org.mvnsearch.spring.boot.nats.serialization.SerializationUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.AnnotationUtils;
@@ -13,7 +14,6 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -33,7 +33,7 @@ public class NatsServiceInvocationHandler implements InvocationHandler {
   @SuppressWarnings("SuspiciousInvocationHandlerImplementation")
   @Override
   public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-    byte[] paramBytes = JsonUtil.toJsonBytes(args[0]);
+    byte[] paramBytes = SerializationUtil.toBytes(args[0]);
     if (!methodReturnTypeMap.containsKey(method)) {
       methodReturnTypeMap.put(method, parseInferredClass(method.getGenericReturnType()));
     }
@@ -44,13 +44,13 @@ public class NatsServiceInvocationHandler implements InvocationHandler {
       String endpoint = serviceExchange.value();
       CompletableFuture<Message> result = nc.request(endpoint, paramBytes);
       return Mono.fromFuture(result).map(msg -> {
-        String textValue = new String(msg.getData(), StandardCharsets.UTF_8);
+        byte[] bytes = msg.getData();
         try {
-          return JsonUtil.convert(textValue, returnType);
+          return SerializationUtil.convert(msg.getData(), returnType);
         } catch (Exception e) {
-          logger.error("NATS-020500: failed to convert text " + textValue + " to object " + returnType.getCanonicalName(), e);
+          logger.error("NATS-020500: failed to convert bytes to object " + returnType.getCanonicalName(), e);
         }
-        return textValue;
+        return bytes;
       });
     } else if (messagingExchange != null) { // publish
       nc.publish(messagingExchange.value(), paramBytes);

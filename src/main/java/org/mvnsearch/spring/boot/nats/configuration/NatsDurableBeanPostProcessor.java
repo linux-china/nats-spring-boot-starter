@@ -7,6 +7,8 @@ import io.nats.client.api.KeyValueWatcher;
 import io.nats.client.impl.NatsKeyValueWatchSubscription;
 import org.mvnsearch.spring.boot.nats.annotation.NatsDurableComponent;
 import org.mvnsearch.spring.boot.nats.annotation.NatsKeyWatcher;
+import org.mvnsearch.spring.boot.nats.serialization.JsonSerialization;
+import org.mvnsearch.spring.boot.nats.serialization.SerializationUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -66,9 +68,9 @@ public class NatsDurableBeanPostProcessor implements BeanPostProcessor, Disposab
       @Override
       public void watch(KeyValueEntry keyValueEntry) {
         try {
-          String textValue = keyValueEntry.getValueAsString();
+          byte[] textValue = keyValueEntry.getValue();
           Class<?> paramType = method.getParameterTypes()[0];
-          Object param = JsonUtil.convert(textValue, paramType);
+          Object param = SerializationUtil.convert(textValue, paramType);
           ReflectionUtils.invokeMethod(method, bean, param);
         } catch (Exception e) {
           logger.error("NATS-010500: failed to update watched key", e);
