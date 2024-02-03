@@ -19,7 +19,7 @@ public class NatsDemoApplication implements AppInstanceOnlyMessageHandler {
     }
 
     @NatsSubscriber(subject = "subject1")
-    public void handler(Message msg) {
+    public void handleSubject1(Message msg) {
         System.out.println(msg.getSubject());
     }
 
