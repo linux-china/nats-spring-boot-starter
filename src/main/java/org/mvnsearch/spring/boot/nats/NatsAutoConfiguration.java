@@ -14,23 +14,23 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class NatsAutoConfiguration {
 
-  @Bean
-  public NatsSubscriberAnnotationBeanPostProcessor natsSubscriberAnnotationBeanPostProcessor() {
-    return new NatsSubscriberAnnotationBeanPostProcessor();
-  }
+    @Bean
+    public NatsSubscriberAnnotationBeanPostProcessor natsSubscriberAnnotationBeanPostProcessor() {
+        return new NatsSubscriberAnnotationBeanPostProcessor();
+    }
 
-  @Bean
-  public NatsServiceBeanPostProcessor natsServiceBeanPostProcessor() {
-    return new NatsServiceBeanPostProcessor();
-  }
+    @Bean
+    public NatsServiceBeanPostProcessor natsServiceBeanPostProcessor() {
+        return new NatsServiceBeanPostProcessor();
+    }
 
-  @Bean
-  public NatsDurableBeanPostProcessor natsDurableBeanPostProcessor() {
-    return new NatsDurableBeanPostProcessor();
-  }
+    @Bean
+    public NatsDurableBeanPostProcessor natsDurableBeanPostProcessor() {
+        return new NatsDurableBeanPostProcessor();
+    }
 
-  @Bean
-  public NatsHealthIndicator natsHealthIndicator() {
-    return new NatsHealthIndicator();
-  }
+    @Bean
+    public NatsHealthIndicator natsHealthIndicator() {
+        return new NatsHealthIndicator();
+    }
 }
