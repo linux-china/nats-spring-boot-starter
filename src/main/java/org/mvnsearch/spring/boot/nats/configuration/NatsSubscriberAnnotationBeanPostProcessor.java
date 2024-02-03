@@ -58,11 +58,6 @@ public class NatsSubscriberAnnotationBeanPostProcessor implements NatsReactive, 
     }
 
     @Override
-    public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
-        return bean;
-    }
-
-    @Override
     public Object postProcessAfterInitialization(final Object bean, final String beanName) throws BeansException {
         Class<?> targetClass = AopUtils.getTargetClass(bean);
         Map<Method, Set<NatsSubscriber>> annotatedMethods = MethodIntrospector.selectMethods(targetClass,
