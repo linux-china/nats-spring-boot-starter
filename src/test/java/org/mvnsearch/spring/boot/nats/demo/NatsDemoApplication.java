@@ -5,7 +5,6 @@ import org.mvnsearch.spring.boot.nats.AppInstanceOnlyMessageHandler;
 import org.mvnsearch.spring.boot.nats.annotation.NatsSubscriber;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ConfigurableApplicationContext;
 
 /**
  * NATS demo application
@@ -16,8 +15,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 public class NatsDemoApplication implements AppInstanceOnlyMessageHandler {
 
     public static void main(String[] args) {
-        ConfigurableApplicationContext run = SpringApplication.run(NatsDemoApplication.class, args);
-        System.out.println("app:" + run.getId());
+        SpringApplication.run(NatsDemoApplication.class, args);
     }
 
     @NatsSubscriber(subject = "subject1")
