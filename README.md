@@ -189,6 +189,15 @@ After `bucket/online.user.count` key changed, the `setOnlineUserCount` method wi
 **Tips**: If you have a state with many fields, and you can use JavaBean or `record` as fields.
 Then call `nats kv put bucket online.admin '{"nick": "linux_china", "phone":"138xxx"}'` to update JavaBean state.
 
+# NATS JetStream KV
+
+[NATS Key/Value Store](https://docs.nats.io/nats-concepts/jetstream/key-value-store) is a nice feature for some cases:
+
+* Configuration Data: watch support
+* Metadata: Data Schema, such as avro, protobuf, json schema etc under `schema-registry` bucket.
+* State data: cooperate with instances, such as rate limit, black list etc.
+* Statics Data: some data for report
+
 # References
 
 * NATS:  https://nats.io/
