@@ -1,6 +1,7 @@
 package org.mvnsearch.spring.boot.nats;
 
 import org.mvnsearch.spring.boot.nats.configuration.NatsDurableBeanPostProcessor;
+import org.mvnsearch.spring.boot.nats.configuration.AppInstanceOnlyMessageHandlerBeanPostProcessor;
 import org.mvnsearch.spring.boot.nats.configuration.NatsServiceBeanPostProcessor;
 import org.mvnsearch.spring.boot.nats.configuration.NatsSubscriberAnnotationBeanPostProcessor;
 import org.springframework.context.annotation.Bean;
@@ -13,6 +14,11 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class NatsAutoConfiguration {
+
+    @Bean
+    public AppInstanceOnlyMessageHandlerBeanPostProcessor appInstanceOnlyMessageHandlerBeanPostProcessor() {
+        return new AppInstanceOnlyMessageHandlerBeanPostProcessor();
+    }
 
     @Bean
     public NatsSubscriberAnnotationBeanPostProcessor natsSubscriberAnnotationBeanPostProcessor() {
