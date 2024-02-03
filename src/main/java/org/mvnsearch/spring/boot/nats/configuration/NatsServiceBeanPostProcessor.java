@@ -2,6 +2,7 @@ package org.mvnsearch.spring.boot.nats.configuration;
 
 import io.nats.client.Connection;
 import io.nats.service.*;
+import org.mvnsearch.spring.boot.nats.NatsContextAware;
 import org.mvnsearch.spring.boot.nats.annotation.NatsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +30,9 @@ public class NatsServiceBeanPostProcessor implements BeanPostProcessor, Disposab
     @Autowired
     @Lazy
     private Connection nc;
+    @Autowired
+    @Lazy
+    private NatsContextAware natsContextAware;
     @Autowired
     @Lazy
     private Environment env;
@@ -75,6 +79,7 @@ public class NatsServiceBeanPostProcessor implements BeanPostProcessor, Disposab
             if (requestMapping4Method != null) {
                 // endpoint metadata
                 Map<String, String> metadata = new HashMap<>();
+                metadata.put("appInstanceSubject", natsContextAware.getSubjectNameForAppInstance());
                 metadata.put("appName", env.getProperty("spring.application.name", "unknown-app"));
                 metadata.put("serverPort", env.getProperty("server.port", "0"));
                 metadata.put("managementServerPort", env.getProperty("management.server.port", "0"));
