@@ -35,12 +35,12 @@ import java.util.concurrent.CompletableFuture;
 public class NatsSubscriberAnnotationBeanPostProcessor implements NatsReactive, BeanPostProcessor, Ordered, BeanFactoryAware, InitializingBean, DisposableBean {
     private static final Logger log = LoggerFactory.getLogger(NatsSubscriberAnnotationBeanPostProcessor.class);
     private BeanFactory beanFactory;
-    private Map<NatsSubscriber, Dispatcher> subscriptions = new HashMap<>();
-    private Connection nats;
+    private final Map<NatsSubscriber, Dispatcher> subscriptions = new HashMap<>();
+    private Connection nc;
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        nats = beanFactory.getBean(Connection.class);
+        nc = beanFactory.getBean(Connection.class);
     }
 
     public Map<NatsSubscriber, Dispatcher> getSubscriptions() {
@@ -116,10 +116,10 @@ public class NatsSubscriberAnnotationBeanPostProcessor implements NatsReactive, 
         };
         Dispatcher dispatcher;
         if ("".equals(natsSubscriber.queueGroup())) {
-            dispatcher = nats.createDispatcher(messageHandler);
+            dispatcher = nc.createDispatcher(messageHandler);
             dispatcher.subscribe(natsSubscriber.subject());
         } else {
-            dispatcher = nats.createDispatcher(messageHandler);
+            dispatcher = nc.createDispatcher(messageHandler);
             dispatcher.subscribe(natsSubscriber.subject(), natsSubscriber.queueGroup());
         }
         subscriptions.put(natsSubscriber, dispatcher);
@@ -127,14 +127,14 @@ public class NatsSubscriberAnnotationBeanPostProcessor implements NatsReactive, 
 
     @Override
     public Mono<Void> publish(String subject, byte[] body) {
-        CompletableFuture<Message> request = nats.request("topic.a", "hello".getBytes());
+        CompletableFuture<Message> request = nc.request(subject, body);
         return Mono.fromFuture(request).then();
     }
 
     @Override
     public Flux<byte[]> subscribe(String subject) {
         return Flux.create(sink -> {
-            Dispatcher dispatcher = nats.createDispatcher(message -> {
+            Dispatcher dispatcher = nc.createDispatcher(message -> {
                 sink.next(message.getData());
             });
             subscriptions.put(createAnnotation(subject, null), dispatcher);
@@ -148,7 +148,7 @@ public class NatsSubscriberAnnotationBeanPostProcessor implements NatsReactive, 
             NatsSubscriber natsSubscriber = entry.getKey();
             try {
                 dispatcher.unsubscribe(natsSubscriber.subject());
-                nats.closeDispatcher(dispatcher);
+                nc.closeDispatcher(dispatcher);
             } catch (Exception e) {
                 log.error("Failed to close " + natsSubscriber.subject(), e);
             }
@@ -166,12 +166,12 @@ public class NatsSubscriberAnnotationBeanPostProcessor implements NatsReactive, 
         return new NatsSubscriber() {
             @Override
             public String subject() {
-                return null;
+                return subject;
             }
 
             @Override
             public String queueGroup() {
-                return null;
+                return queueGroup;
             }
 
             @Override
