@@ -61,7 +61,7 @@ public class NatsStrategiesAutoConfiguration {
   @Configuration(proxyBeanMethods = false)
   protected static class TextStrategyConfiguration {
     @Bean
-    @ConditionalOnBean(ObjectMapper.class)
+    @Order(1)
     public NatsStrategiesCustomizer textNatsStrategyCustomizer(ObjectMapper objectMapper) {
       return (strategy) -> {
         strategy.decoder(StringDecoder.textPlainOnly());
