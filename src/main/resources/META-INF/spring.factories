@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-org.mvnsearch.spring.boot.nats.NatsAutoConfiguration
+org.mvnsearch.spring.boot.nats.NatsAutoConfiguration,org.mvnsearch.spring.boot.nats.NatsStrategiesAutoConfiguration
