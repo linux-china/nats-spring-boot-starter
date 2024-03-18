@@ -212,3 +212,4 @@ Please official Spring Cloud Stream Binder for NATS [nats-spring-cloud-stream-bi
 * NATS Java client: https://github.com/nats-io/java-nats
 * spring-nats: https://github.com/nats-io/spring-nats
 * Method Handles in Java: http://www.baeldung.com/java-method-handles
+* EventCatalog: Documentation tool for Event-Driven Architectures - https://www.eventcatalog.dev/
