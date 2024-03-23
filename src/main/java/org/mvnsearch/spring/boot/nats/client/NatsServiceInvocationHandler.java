@@ -26,6 +26,7 @@ public class NatsServiceInvocationHandler implements InvocationHandler {
   private final Connection nc;
   private final Class<?> serviceInterface;
   private String contentType = "tex/plain";
+  private String topicPath = null;
   private final Map<Method, Class<?>> methodReturnTypeMap = new ConcurrentHashMap<>();
 
   public NatsServiceInvocationHandler(Connection nc, Class<?> serviceInterface) {
@@ -34,6 +35,9 @@ public class NatsServiceInvocationHandler implements InvocationHandler {
     final NatsExchange natsExchange = serviceInterface.getAnnotation(NatsExchange.class);
     if (natsExchange != null) {
       this.contentType = natsExchange.contentType();
+      if (!natsExchange.path().isEmpty()) {
+        topicPath = natsExchange.path();
+      }
     }
   }
 
@@ -49,6 +53,9 @@ public class NatsServiceInvocationHandler implements InvocationHandler {
     MessagingExchange messagingExchange = AnnotationUtils.findAnnotation(method, MessagingExchange.class);
     if (serviceExchange != null) {
       String endpoint = serviceExchange.value();
+      if (topicPath != null && !topicPath.isEmpty()) {
+        endpoint = topicPath + "." + endpoint;
+      }
       CompletableFuture<Message> result = nc.request(endpoint, paramBytes);
       return Mono.fromFuture(result).handle((msg, sink) -> {
         byte[] bytes = msg.getData();
@@ -67,7 +74,13 @@ public class NatsServiceInvocationHandler implements InvocationHandler {
         }
       });
     } else if (messagingExchange != null) { // publish
-      nc.publish(messagingExchange.value(), paramBytes);
+      String endpoint = messagingExchange.value();
+      if (topicPath != null && !topicPath.isEmpty()) {
+        endpoint = topicPath + "." + endpoint;
+      }
+      nc.publish(endpoint, paramBytes);
+      final Class<?> methodReturnType = method.getReturnType();
+      return methodReturnType == Mono.class ? Mono.empty() : null;
     }
     throw new Exception("Failed to call: " + serviceInterface.getCanonicalName() + "." + method.getName());
   }
