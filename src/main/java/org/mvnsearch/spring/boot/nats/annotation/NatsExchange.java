@@ -9,4 +9,5 @@ public @interface NatsExchange {
     String value() default "";
 
     String group() default "";
+    String contentType() default "text/plain";
 }
