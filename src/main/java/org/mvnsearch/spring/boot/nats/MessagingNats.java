@@ -6,6 +6,9 @@ import io.nats.client.impl.Headers;
 import io.nats.service.ServiceMessage;
 import org.mvnsearch.spring.boot.nats.services.NatsServiceReturnValueHandler;
 import org.mvnsearch.spring.boot.nats.services.NatsStrategies;
+import org.springframework.core.io.buffer.DataBuffer;
+import org.springframework.core.io.buffer.DefaultDataBuffer;
+import org.springframework.core.io.buffer.DefaultDataBufferFactory;
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.messaging.ReactiveMessageHandler;
 import org.springframework.messaging.handler.DestinationPatternsMessageCondition;
@@ -13,6 +16,7 @@ import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.messaging.support.MessageHeaderAccessor;
 import org.springframework.util.MimeType;
 import org.springframework.util.RouteMatcher;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.nio.charset.StandardCharsets;
@@ -59,7 +63,9 @@ public class MessagingNats {
   public Mono<Void> service(ServiceMessage serviceMessage) {
     AtomicReference<Mono<Message>> responseRef = new AtomicReference<>();
     MessageHeaders headers = createHeaders(serviceMessage, responseRef);
-    org.springframework.messaging.Message<?> message = MessageBuilder.createMessage(serviceMessage.getData(), headers);
+    final DefaultDataBuffer dataBuffer = DefaultDataBufferFactory.sharedInstance.wrap(serviceMessage.getData());
+    Flux<DataBuffer> buffers = Flux.just(dataBuffer);
+    org.springframework.messaging.Message<?> message = MessageBuilder.createMessage(buffers, headers);
     return Mono.defer(() -> this.messageHandler.handleMessage(message))
       .then(Mono.defer(() -> responseRef.get() != null ? responseRef.get() : Mono.error(new IllegalStateException("Expected response"))))
       .flatMap(this::publish);
@@ -73,7 +79,7 @@ public class MessagingNats {
       contentType = originalHeaders.getFirst("content-type");
       originalHeaders.forEach(headers::setHeader);
     }
-    if (contentType!=null && contentType.contains("json")) {
+    if (contentType != null && contentType.contains("json")) {
       headers.setContentType(new MimeType("application", "json", StandardCharsets.UTF_8));
     } else {
       headers.setContentType(new MimeType("text", "plain", StandardCharsets.UTF_8));
