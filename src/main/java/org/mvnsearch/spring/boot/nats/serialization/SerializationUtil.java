@@ -1,12 +1,29 @@
 package org.mvnsearch.spring.boot.nats.serialization;
 
 import com.google.protobuf.Message;
+import org.apache.avro.specific.SpecificRecord;
 
 import java.nio.charset.StandardCharsets;
 
 public class SerializationUtil {
   private static final JsonSerialization json = new JsonSerialization();
-  private static final ProtobufSerialization protobuf = new ProtobufSerialization();
+  private static ProtobufSerialization protobuf = null;
+  private static AvroSerialization avro = null;
+
+  static {
+    try {
+      Class.forName("com.google.protobuf.Message");
+      protobuf = new ProtobufSerialization();
+    } catch (Exception ignore) {
+
+    }
+    try {
+      Class.forName("org.apache.avro.specific.SpecificRecord");
+      avro = new AvroSerialization();
+    } catch (Exception ignore) {
+
+    }
+  }
 
   public static Object convert(byte[] bytes, Class<?> targetClass, String contentType) throws Exception {
     if (contentType.startsWith("text/")) {
@@ -26,8 +43,10 @@ public class SerializationUtil {
       } else {
         return json.convert(bytes, targetClass);
       }
-    } else if (targetClass.isAssignableFrom(Message.class)) {
+    } else if (protobuf != null && targetClass.isAssignableFrom(Message.class)) {
       return protobuf.convert(bytes, targetClass);
+    } else if (avro != null && targetClass.isAssignableFrom(SpecificRecord.class)) {
+      return avro.convert(bytes, targetClass);
     } else {
       return json.convert(bytes, targetClass);
     }
@@ -36,8 +55,10 @@ public class SerializationUtil {
   public static byte[] toBytes(Object object, String contentType) throws Exception {
     if (contentType.startsWith("text/")) {
       return object.toString().getBytes(StandardCharsets.UTF_8);
-    } else if (object instanceof Message) {
+    } else if (protobuf != null && object instanceof Message) {
       return protobuf.toBytes(object);
+    } else if (avro != null && object instanceof SpecificRecord) {
+      return avro.toBytes(object);
     } else {
       return json.toBytes(object);
     }
