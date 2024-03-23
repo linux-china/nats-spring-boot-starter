@@ -4,13 +4,13 @@ import org.mvnsearch.spring.boot.nats.annotation.NatsExchange;
 import org.mvnsearch.spring.boot.nats.annotation.ServiceExchange;
 import reactor.core.publisher.Mono;
 
-@NatsExchange("nats://localhost:4222")
+@NatsExchange(value = "nats://localhost:4222", path = "minmax")
 public interface MathService {
 
-  @ServiceExchange("minmax.min")
+  @ServiceExchange("min")
   Mono<Integer> min(String text);
 
-  @ServiceExchange("minmax.max")
+  @ServiceExchange("max")
    Mono<Integer> max(String text);
 
 }
