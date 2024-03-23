@@ -3,6 +3,7 @@ package org.mvnsearch.spring.boot.nats;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.mvnsearch.spring.boot.nats.services.NatsStrategies;
 import org.mvnsearch.spring.boot.nats.services.NatsStrategiesCustomizer;
+import org.mvnsearch.spring.boot.nats.services.StringEncoder;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -14,7 +15,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.codec.ByteArrayDecoder;
 import org.springframework.core.codec.ByteArrayEncoder;
-import org.springframework.core.codec.CharSequenceEncoder;
 import org.springframework.core.codec.StringDecoder;
 import org.springframework.http.MediaType;
 import org.springframework.http.codec.json.Jackson2JsonDecoder;
@@ -65,7 +65,7 @@ public class NatsStrategiesAutoConfiguration {
     public NatsStrategiesCustomizer textNatsStrategyCustomizer(ObjectMapper objectMapper) {
       return (strategy) -> {
         strategy.decoder(StringDecoder.textPlainOnly());
-        strategy.encoder(CharSequenceEncoder.textPlainOnly());
+        strategy.encoder(StringEncoder.textPlainOnly());
       };
     }
   }
