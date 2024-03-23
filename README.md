@@ -122,7 +122,11 @@ public class UserNatsService {
 ```
 
 Please refer [MessageMapping](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/messaging/handler/annotation/MessageMapping.html)
-for arguments binding.
+for arguments binding. Now only following annotations supported:
+
+* `@Payload String body` or `String body`: bind the message body to the method parameter
+* `@Header("contentType") String contentType`: bind the message header to the method parameter
+* `@Headers Map<String, Object> headers`: bind the destination variable to the method parameter
 
 After server started, and you can use `nats micro ls` to check services, and use `nats request minmax.min "1,2"` to make a test.
 
