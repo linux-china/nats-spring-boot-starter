@@ -2,6 +2,7 @@ package org.mvnsearch.spring.boot.nats;
 
 import io.nats.client.Connection;
 import io.nats.client.Message;
+import io.nats.client.impl.Headers;
 import io.nats.service.ServiceMessage;
 import org.mvnsearch.spring.boot.nats.services.NatsServiceReturnValueHandler;
 import org.mvnsearch.spring.boot.nats.services.NatsStrategies;
@@ -66,11 +67,19 @@ public class MessagingNats {
 
   private MessageHeaders createHeaders(ServiceMessage serviceMessage, AtomicReference<Mono<Message>> responseRef) {
     MessageHeaderAccessor headers = new MessageHeaderAccessor();
-
-    headers.setContentType(new MimeType("application", "json", StandardCharsets.UTF_8));
+    String contentType = "text/plain";
+    final Headers originalHeaders = serviceMessage.getHeaders();
+    if (originalHeaders != null && !originalHeaders.isEmpty()) {
+      contentType = originalHeaders.getFirst("content-type");
+      originalHeaders.forEach(headers::setHeader);
+    }
+    if (contentType!=null && contentType.contains("json")) {
+      headers.setContentType(new MimeType("application", "json", StandardCharsets.UTF_8));
+    } else {
+      headers.setContentType(new MimeType("text", "plain", StandardCharsets.UTF_8));
+    }
     headers.setHeader("subject", serviceMessage.getSubject());
     headers.setHeader("reply-to", serviceMessage.getReplyTo());
-    serviceMessage.getHeaders().forEach(headers::setHeader);
     RouteMatcher.Route route = this.routeMatcher.parseRoute(serviceMessage.getSubject());
     headers.setHeader(DestinationPatternsMessageCondition.LOOKUP_DESTINATION_HEADER, route);
     headers.setLeaveMutable(true);
