@@ -109,17 +109,20 @@ In the server side, create a normal Spring Boot controller with `@MessageMapping
 @NatsService(name = "minmax", version = "0.0.1", description = "min/max number service")
 public class UserNatsService {
 
-    @MessageMapping("min")
-    public int min(ServiceMessage msg) {
-        int min = Integer.MAX_VALUE;
-        String[] input = new String(msg.getData()).split(",");
-        for (String n : input) {
-            min = Math.min(min, Integer.parseInt(n));
-        }
-        return min;
+  @MessageMapping("min")
+  public int min(@Payload String body) {
+    int min = Integer.MAX_VALUE;
+    String[] input = body.split(",");
+    for (String n : input) {
+      min = Math.min(min, Integer.parseInt(n));
     }
+    return min;
+  }
 }
 ```
+
+Please refer [MessageMapping](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/messaging/handler/annotation/MessageMapping.html)
+for arguments binding.
 
 After server started, and you can use `nats micro ls` to check services, and use `nats request minmax.min "1,2"` to make a test.
 
