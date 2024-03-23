@@ -73,7 +73,6 @@ public class NatsStrategiesAutoConfiguration {
   @Configuration(proxyBeanMethods = false)
   protected static class BinaryStrategyConfiguration {
     @Bean
-    @ConditionalOnBean(ObjectMapper.class)
     public NatsStrategiesCustomizer binaryNatsStrategyCustomizer(ObjectMapper objectMapper) {
       return (strategy) -> {
         strategy.decoder(new ByteArrayDecoder());
