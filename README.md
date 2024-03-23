@@ -8,12 +8,12 @@ Spring Boot 2.x/3.x starter for NATS with Publish/Subscribe, Services Framework,
 
 NATS is very simple, why you create a starter for Spring Boot?
 
-* Nats Microservices framework support: RPC style
-* JetStream KV watch support: Durable Component
+* Nats Microservices framework support: RPC style with `json`, `protobuf`, `avro` etc. format.
+* JetStream KV watch support: durable Component and state sync between instances.
 * NATS service interface: almost alike Spring HTTP interface to make service call easy
 * Spring Kafka like: `@NatsSubscriber` to listen subject
 * Subject for instance only: make A/B easy
-* Metrics & endpoints: NATS states
+* Metrics & endpoints: `/actuator/nats`, NATS information/statistics
 * Health indicator for NATS
 
 # Get Started with Publish/Subscribe
@@ -23,9 +23,9 @@ NATS is very simple, why you create a starter for Spring Boot?
 ```xml
 
 <dependency>
-    <groupId>org.mvnsearch.spring.boot</groupId>
-    <artifactId>nats-spring-boot-starter</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+  <groupId>org.mvnsearch.spring.boot</groupId>
+  <artifactId>nats-spring-boot-starter</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -64,14 +64,14 @@ It's easy and simple, and you can use `AppInstanceOnlyMessageHandler` interface 
 @SpringBootApplication
 public class NatsDemoApplication implements AppInstanceOnlyMessageHandler {
 
-    public static void main(String[] args) {
-        SpringApplication.run(NatsDemoApplication.class, args);
-    }
+  public static void main(String[] args) {
+    SpringApplication.run(NatsDemoApplication.class, args);
+  }
 
-    @Override
-    public void onMessage(Message msg) throws InterruptedException {
-        System.out.println("Received message from:" + msg.getSubject());
-    }
+  @Override
+  public void onMessage(Message msg) throws InterruptedException {
+    System.out.println("Received message from:" + msg.getSubject());
+  }
 }
 ```
 
@@ -87,16 +87,19 @@ If you want to use Reactive style, and you can use `NatsReactive` bean, and inte
 ```java
 public interface NatsReactive {
 
-    Mono<Void> publish(String subject, byte[] body);
+  Mono<Void> publish(String subject, byte[] body);
 
-    Flux<byte[]> subscribe(String subject);
+  Flux<byte[]> subscribe(String subject);
 }
 ```
 
 # NATS MicroServices framework
 
-[NATS Services Framework](https://natsbyexample.com/examples/services/intro/java) is MicroServices RPC framework with Service Discovery support,
-and you can check [NATS Service API Spec](https://github.com/nats-io/nats-architecture-and-design/blob/main/adr/ADR-32.md) for detail.
+[NATS Services Framework](https://natsbyexample.com/examples/services/intro/java) is MicroServices RPC framework with
+Service Discovery support,
+and you can
+check [NATS Service API Spec](https://github.com/nats-io/nats-architecture-and-design/blob/main/adr/ADR-32.md) for
+detail.
 
 ### How to publish NATS MicroServices?
 
@@ -121,14 +124,16 @@ public class UserNatsService {
 }
 ```
 
-Please refer [MessageMapping](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/messaging/handler/annotation/MessageMapping.html)
+Please
+refer [MessageMapping](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/messaging/handler/annotation/MessageMapping.html)
 for arguments binding. Now only following annotations supported:
 
 * `@Payload String body` or `String body`: bind the message body to the method parameter
 * `@Header("contentType") String contentType`: bind the message header to the method parameter
 * `@Headers Map<String, Object> headers`: bind the destination variable to the method parameter
 
-After server started, and you can use `nats micro ls` to check services, and use `nats request minmax.min "1,2"` to make a test.
+After server started, and you can use `nats micro ls` to check services, and use `nats request minmax.min "1,2"` to make
+a test.
 
 ### How to consume NATS MicroServices?
 
@@ -139,8 +144,8 @@ In the client side, create an interface with `@NatsExchange` and add methods wit
 @NatsExchange
 public interface UserService {
 
-    @ServiceExchange("minmax.min")
-    Mono<Integer> min(String text);
+  @ServiceExchange("minmax.min")
+  Mono<Integer> min(String text);
 }
 ```
 
@@ -149,26 +154,37 @@ Then to build service stub proxy to call the service.
 ```java
 public class UserServiceTest {
 
-    @Test
-    public void testServiceCall() throws Exception {
-        Connection nc = Nats.connect("nats://localhost:4222");
-        UserService userService = NatsExchangeProxyFactory.buildStub(nc, UserService.class);
-        Integer min = userService.min("1,2").block();
-        System.out.println(min);
-    }
+  @Test
+  public void testServiceCall() throws Exception {
+    Connection nc = Nats.connect("nats://localhost:4222");
+    UserService userService = NatsExchangeProxyFactory.buildStub(nc, UserService.class);
+    Integer min = userService.min("1,2").block();
+    System.out.println(min);
+  }
 }
 ```
 
-**Attention**: NATS MicroServices frameworks is based on `request-reply` model, and it is async mode, and you need to use Reactive `Mono` to handle the result.
+**Attention**: NATS MicroServices frameworks is based on `request-reply` model, and it is async mode, and you need to
+use Reactive `Mono` to handle the result.
 
 ### Object serialization for NATS Services
 
-Now only json support, and more serialization support will be added in the future.
+If you want to use JSON, and you can use `@NatsExchange` annotation to specify the content type as following:
 
-* Protobuf: native and protostuff https://developers.google.com/protocol-buffers/
-* Avro: https://avro.apache.org/ Kafka Schema
-* CBOR: http://cbor.io/
-* MessagePack: https://msgpack.org/
+```java
+
+@NatsExchange(value = "nats://localhost:4222", path = "UserService", contentType = "application/json")
+public interface UserService {
+  @ServiceExchange("hello")
+  Mono<String> hello(User user);
+}
+```
+
+The following content types are supported:
+
+* Jackson(application/json):  https://github.com/FasterXML/jackson
+* Protobuf(application/protobuf): https://developers.google.com/protocol-buffers/
+* Avro(application/avro): https://avro.apache.org/ friendly with Kafka Schema
 
 # Durable Component
 
@@ -180,18 +196,19 @@ and you can use NATS JetStream KV watch to sync states between instances.
 @Component
 @NatsDurableComponent
 public class OnlineUserComponent {
-    private static final Logger logger = LoggerFactory.getLogger(OnlineUserComponent.class);
-    private int onlineUserCount;
+  private static final Logger logger = LoggerFactory.getLogger(OnlineUserComponent.class);
+  private int onlineUserCount;
 
-    @NatsKeyWatcher(bucket = "bucket", key = "online.user.count")
-    public void setOnlineUserCount(int count) {
-        logger.info("Online user count: " + count);
-        this.onlineUserCount = count;
-    }
+  @NatsKeyWatcher(bucket = "bucket", key = "online.user.count")
+  public void setOnlineUserCount(int count) {
+    logger.info("Online user count: " + count);
+    this.onlineUserCount = count;
+  }
 }
 ```
 
-After `bucket/online.user.count` key changed, the `setOnlineUserCount` method will be called to sync the state between instances.
+After `bucket/online.user.count` key changed, the `setOnlineUserCount` method will be called to sync the state between
+instances.
 
 **Tips**: If you have a state with many fields, and you can use JavaBean or `record` as fields.
 Then call `nats kv put bucket online.admin '{"nick": "linux_china", "phone":"138xxx"}'` to update JavaBean state.
@@ -207,7 +224,8 @@ Then call `nats kv put bucket online.admin '{"nick": "linux_china", "phone":"138
 
 # Spring Cloud Stream Binder for NATS
 
-Please official Spring Cloud Stream Binder for NATS [nats-spring-cloud-stream-binder](https://github.com/nats-io/spring-nats).
+Please official Spring Cloud Stream Binder for
+NATS [nats-spring-cloud-stream-binder](https://github.com/nats-io/spring-nats).
 
 **Tips**: nats-spring-boot-starter is based on spring-nats, and you can use both of them in your project.
 
