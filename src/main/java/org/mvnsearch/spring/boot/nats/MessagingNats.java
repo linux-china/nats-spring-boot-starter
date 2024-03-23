@@ -73,17 +73,20 @@ public class MessagingNats {
 
   private MessageHeaders createHeaders(ServiceMessage serviceMessage, AtomicReference<Mono<Message>> responseRef) {
     MessageHeaderAccessor headers = new MessageHeaderAccessor();
-    String contentType = "text/plain";
     final Headers originalHeaders = serviceMessage.getHeaders();
-    if (originalHeaders != null && !originalHeaders.isEmpty()) {
-      contentType = originalHeaders.getFirst("content-type");
+    // content type detection
+    if (originalHeaders != null && !originalHeaders.isEmpty()) { // headers not empty
       originalHeaders.forEach(headers::setHeader);
-    }
-    if (contentType != null && contentType.contains("json")) {
-      headers.setContentType(new MimeType("application", "json", StandardCharsets.UTF_8));
-    } else {
+      if (originalHeaders.containsKey("content-type")) {
+        String contentType = originalHeaders.getFirst("content-type");
+        headers.setContentType(new MimeType(contentType));
+      } else {
+        headers.setContentType(new MimeType("text", "plain", StandardCharsets.UTF_8));
+      }
+    } else { // default content type is text/plain
       headers.setContentType(new MimeType("text", "plain", StandardCharsets.UTF_8));
     }
+    // routing
     headers.setHeader("subject", serviceMessage.getSubject());
     headers.setHeader("reply-to", serviceMessage.getReplyTo());
     RouteMatcher.Route route = this.routeMatcher.parseRoute(serviceMessage.getSubject());
