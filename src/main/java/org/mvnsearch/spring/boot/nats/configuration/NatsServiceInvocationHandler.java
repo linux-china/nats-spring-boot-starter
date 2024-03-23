@@ -4,6 +4,7 @@ import io.nats.client.Connection;
 import io.nats.client.Message;
 import io.nats.client.impl.Headers;
 import org.mvnsearch.spring.boot.nats.annotation.MessagingExchange;
+import org.mvnsearch.spring.boot.nats.annotation.NatsExchange;
 import org.mvnsearch.spring.boot.nats.annotation.ServiceExchange;
 import org.mvnsearch.spring.boot.nats.serialization.SerializationUtil;
 import org.slf4j.Logger;
@@ -24,17 +25,22 @@ public class NatsServiceInvocationHandler implements InvocationHandler {
 
   private final Connection nc;
   private final Class<?> serviceInterface;
+  private String contentType = "tex/plain";
   private final Map<Method, Class<?>> methodReturnTypeMap = new ConcurrentHashMap<>();
 
   public NatsServiceInvocationHandler(Connection nc, Class<?> serviceInterface) {
     this.nc = nc;
     this.serviceInterface = serviceInterface;
+    final NatsExchange natsExchange = serviceInterface.getAnnotation(NatsExchange.class);
+    if (natsExchange != null) {
+      this.contentType = natsExchange.contentType();
+    }
   }
 
   @SuppressWarnings("SuspiciousInvocationHandlerImplementation")
   @Override
   public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-    byte[] paramBytes = SerializationUtil.toBytes(args[0]);
+    byte[] paramBytes = SerializationUtil.toBytes(args[0], contentType);
     if (!methodReturnTypeMap.containsKey(method)) {
       methodReturnTypeMap.put(method, parseInferredClass(method.getGenericReturnType()));
     }
@@ -53,7 +59,7 @@ public class NatsServiceInvocationHandler implements InvocationHandler {
           sink.complete();
         } else {
           try {
-            sink.next(SerializationUtil.convert(bytes, returnType));
+            sink.next(SerializationUtil.convert(bytes, returnType, contentType));
           } catch (Exception e) {
             logger.error("NATS-020500: failed to convert bytes to object {}", returnType.getCanonicalName(), e);
             sink.error(e);
