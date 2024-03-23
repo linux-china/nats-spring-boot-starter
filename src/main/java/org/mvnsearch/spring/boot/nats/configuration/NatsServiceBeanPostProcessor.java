@@ -30,7 +30,6 @@ import java.util.*;
 public class NatsServiceBeanPostProcessor implements BeanPostProcessor, DisposableBean {
   private static final Logger logger = LoggerFactory.getLogger(NatsServiceBeanPostProcessor.class);
   private static final byte[] EMPTY_BYTES = new byte[]{};
-
   @Autowired
   @Lazy
   private Connection nc;
@@ -45,6 +44,9 @@ public class NatsServiceBeanPostProcessor implements BeanPostProcessor, Disposab
   private Environment env;
   private final List<Service> natsServices = new ArrayList<>();
 
+  public List<Service> getNatsServices() {
+    return natsServices;
+  }
 
   @Override
   public void destroy() throws Exception {
@@ -90,6 +92,7 @@ public class NatsServiceBeanPostProcessor implements BeanPostProcessor, Disposab
         metadata.put("appName", env.getProperty("spring.application.name", "unknown-app"));
         metadata.put("serverPort", env.getProperty("server.port", "0"));
         metadata.put("managementServerPort", env.getProperty("management.server.port", "0"));
+        metadata.put("serviceInterface", clazz.getCanonicalName());
         try {
           String serverIp = getServerIp();
           if (serverIp != null) {
