@@ -1,6 +1,6 @@
 package org.mvnsearch.spring.boot.nats.serialization;
 
-import com.google.protobuf.Message;
+import com.google.protobuf.MessageLite;
 import org.apache.avro.specific.SpecificRecord;
 
 import java.nio.charset.StandardCharsets;
@@ -12,7 +12,7 @@ public class SerializationUtil {
 
   static {
     try {
-      Class.forName("com.google.protobuf.Message");
+      Class.forName("com.google.protobuf.MessageLite");
       protobuf = new ProtobufSerialization();
     } catch (Exception ignore) {
 
@@ -43,7 +43,7 @@ public class SerializationUtil {
       } else {
         return json.convert(bytes, targetClass);
       }
-    } else if (protobuf != null && targetClass.isAssignableFrom(Message.class)) {
+    } else if (protobuf != null && targetClass.isAssignableFrom(MessageLite.class)) {
       return protobuf.convert(bytes, targetClass);
     } else if (avro != null && targetClass.isAssignableFrom(SpecificRecord.class)) {
       return avro.convert(bytes, targetClass);
@@ -55,7 +55,7 @@ public class SerializationUtil {
   public static byte[] toBytes(Object object, String contentType) throws Exception {
     if (contentType.startsWith("text/")) {
       return object.toString().getBytes(StandardCharsets.UTF_8);
-    } else if (protobuf != null && object instanceof Message) {
+    } else if (protobuf != null && object instanceof MessageLite) {
       return protobuf.toBytes(object);
     } else if (avro != null && object instanceof SpecificRecord) {
       return avro.toBytes(object);
