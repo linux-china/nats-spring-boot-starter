@@ -2,6 +2,7 @@ package org.mvnsearch.spring.boot.nats.configuration;
 
 import io.nats.client.Connection;
 import io.nats.client.Message;
+import io.nats.client.impl.Headers;
 import org.mvnsearch.spring.boot.nats.annotation.MessagingExchange;
 import org.mvnsearch.spring.boot.nats.annotation.ServiceExchange;
 import org.mvnsearch.spring.boot.nats.serialization.SerializationUtil;
@@ -43,14 +44,21 @@ public class NatsServiceInvocationHandler implements InvocationHandler {
     if (serviceExchange != null) {
       String endpoint = serviceExchange.value();
       CompletableFuture<Message> result = nc.request(endpoint, paramBytes);
-      return Mono.fromFuture(result).map(msg -> {
+      return Mono.fromFuture(result).handle((msg, sink) -> {
         byte[] bytes = msg.getData();
-        try {
-          return SerializationUtil.convert(msg.getData(), returnType);
-        } catch (Exception e) {
-          logger.error("NATS-020500: failed to convert bytes to object " + returnType.getCanonicalName(), e);
+        final Headers headers = msg.getHeaders();
+        if (headers != null && headers.containsKey("error")) {
+          sink.error(new Exception(headers.getFirst("error")));
+        } else if (bytes == null || bytes.length == 0) { // return value(Mono) is empty
+          sink.complete();
+        } else {
+          try {
+            sink.next(SerializationUtil.convert(bytes, returnType));
+          } catch (Exception e) {
+            logger.error("NATS-020500: failed to convert bytes to object {}", returnType.getCanonicalName(), e);
+            sink.error(e);
+          }
         }
-        return bytes;
       });
     } else if (messagingExchange != null) { // publish
       nc.publish(messagingExchange.value(), paramBytes);
@@ -85,7 +93,7 @@ public class NatsServiceInvocationHandler implements InvocationHandler {
           try {
             inferredClass = Class.forName(typeName);
           } catch (Exception e) {
-            logger.error("NATS-100500: failed to resolve inferred class: " + genericType.getTypeName(), e);
+            logger.error("NATS-100500: failed to resolve inferred class: {}", genericType.getTypeName(), e);
           }
         }
       }
