@@ -10,4 +10,7 @@ public interface MathService {
   @ServiceExchange("minmax.min")
   Mono<Integer> min(String text);
 
+  @ServiceExchange("minmax.max")
+   Mono<Integer> max(String text);
+
 }
