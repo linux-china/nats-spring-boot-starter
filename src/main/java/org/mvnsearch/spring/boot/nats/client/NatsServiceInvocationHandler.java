@@ -1,4 +1,4 @@
-package org.mvnsearch.spring.boot.nats.configuration;
+package org.mvnsearch.spring.boot.nats.client;
 
 import io.nats.client.Connection;
 import io.nats.client.Message;
