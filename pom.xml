@@ -20,6 +20,7 @@
     <jnats.version>2.17.2</jnats.version>
     <nats-spring.version>0.5.7</nats-spring.version>
     <protobuf-java.version>3.25.2</protobuf-java.version>
+    <avro.version>1.11.1</avro.version>
   </properties>
 
   <developers>
@@ -79,6 +80,11 @@
     <dependency>
       <groupId>com.google.protobuf</groupId>
       <artifactId>protobuf-java-util</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.avro</groupId>
+      <artifactId>avro</artifactId>
+      <version>${avro.version}</version>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
