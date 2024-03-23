@@ -24,9 +24,7 @@ public class UserServiceTest {
 
   @Test
   public void testHello() throws Exception {
-    User user = new User();
-    user.setId(1);
-    user.setNick("linux-china");
+    User user = new User(1, "linux-china");
     String hello = userService.hello(user).block();
     System.out.println(hello);
   }
