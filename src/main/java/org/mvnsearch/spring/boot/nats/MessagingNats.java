@@ -1,5 +1,6 @@
 package org.mvnsearch.spring.boot.nats;
 
+import io.micrometer.core.instrument.Metrics;
 import io.nats.client.Connection;
 import io.nats.client.Message;
 import io.nats.client.impl.Headers;
@@ -60,6 +61,8 @@ public class MessagingNats {
    * @return void
    */
   public Mono<Void> service(ServiceMessage serviceMessage) {
+    // metrics counter
+    Metrics.counter("nats." + serviceMessage.getSubject()).increment();
     AtomicReference<Mono<Message>> responseRef = new AtomicReference<>();
     MessageHeaders headers = createHeaders(serviceMessage, responseRef);
     final DefaultDataBuffer dataBuffer = DefaultDataBufferFactory.sharedInstance.wrap(serviceMessage.getData());
