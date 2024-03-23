@@ -19,7 +19,6 @@ import org.springframework.util.RouteMatcher;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.nio.charset.StandardCharsets;
 import java.util.concurrent.atomic.AtomicReference;
 
 
@@ -81,10 +80,10 @@ public class MessagingNats {
         String contentType = originalHeaders.getFirst("content-type");
         headers.setContentType(new MimeType(contentType));
       } else {
-        headers.setContentType(new MimeType("text", "plain", StandardCharsets.UTF_8));
+        headers.setContentType(this.dataMimeType);
       }
-    } else { // default content type is text/plain
-      headers.setContentType(new MimeType("text", "plain", StandardCharsets.UTF_8));
+    } else { // default content type
+      headers.setContentType(this.dataMimeType);
     }
     // routing
     headers.setHeader("subject", serviceMessage.getSubject());

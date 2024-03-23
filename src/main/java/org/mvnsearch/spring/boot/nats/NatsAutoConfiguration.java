@@ -15,6 +15,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.messaging.ReactiveMessageHandler;
 
+import java.nio.charset.StandardCharsets;
+
 /**
  * NATS auto configuration
  *
@@ -25,7 +27,7 @@ public class NatsAutoConfiguration {
 
   @Bean
   public MessagingNats messagingNats(Connection nc, ReactiveMessageHandler messageHandler, NatsStrategies strategies) {
-    return new MessagingNats(new MediaType("text", "plain"), nc, messageHandler, strategies);
+    return new MessagingNats(new MediaType("text", "plain", StandardCharsets.UTF_8), nc, messageHandler, strategies);
   }
 
   @Bean
