@@ -25,7 +25,7 @@ public class MathNatsService {
   }
 
   @MessageMapping("max")
-  public Mono<String> max(@Payload String body) {
+  public Mono<String> max(String body) {
     int max = Integer.MIN_VALUE;
     String[] input = body.split(",");
     for (String n : input) {
