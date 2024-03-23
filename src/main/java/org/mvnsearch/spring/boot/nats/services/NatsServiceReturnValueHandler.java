@@ -40,6 +40,14 @@ public class NatsServiceReturnValueHandler extends AbstractEncoderMethodReturnVa
 
   @Override
   protected Mono<Void> handleNoContent(MethodParameter returnType, Message<?> message) {
+    AtomicReference<Mono<io.nats.client.Message>> responseRef = getResponseReference(message);
+    Assert.notNull(responseRef, "Missing '" + RESPONSE_HEADER + "'");
+    // return null object
+    final NatsMessage msg = NatsMessage.builder()
+      .data(new byte[]{})
+      .subject(message.getHeaders().get("reply-to", String.class))
+      .build();
+    responseRef.set(Mono.just(msg));
     return Mono.empty();
   }
 
