@@ -1,6 +1,7 @@
 package org.mvnsearch.spring.boot.nats;
 
 import io.nats.client.Connection;
+import io.nats.spring.boot.autoconfigure.NatsProperties;
 import org.mvnsearch.spring.boot.nats.configuration.AppInstanceOnlyMessageHandlerBeanPostProcessor;
 import org.mvnsearch.spring.boot.nats.configuration.NatsDurableBeanPostProcessor;
 import org.mvnsearch.spring.boot.nats.configuration.NatsServiceBeanPostProcessor;
@@ -54,6 +55,11 @@ public class NatsAutoConfiguration {
   @Bean
   public NatsDurableBeanPostProcessor natsDurableBeanPostProcessor() {
     return new NatsDurableBeanPostProcessor();
+  }
+
+  @Bean
+  public NatsActuatorEndpoint natsActuatorEndpoint(NatsProperties natsProperties) {
+    return new NatsActuatorEndpoint(natsProperties);
   }
 
   @Bean
