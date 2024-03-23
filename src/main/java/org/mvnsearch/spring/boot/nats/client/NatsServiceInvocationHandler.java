@@ -44,6 +44,13 @@ public class NatsServiceInvocationHandler implements InvocationHandler {
   @SuppressWarnings("SuspiciousInvocationHandlerImplementation")
   @Override
   public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+    //interface default method validation for JDK Proxy only, not necessary for ByteBuddy
+    if (method.isDefault()) {
+      return DefaultMethodHandler.getMethodHandle(method, serviceInterface).bindTo(proxy).invokeWithArguments(args);
+    } else if (method.getDeclaringClass().equals(Object.class)) { //delegate hashCode, equals, or toString methods to this
+      return method.invoke(this);
+    }
+    // proxy for interface methods
     byte[] paramBytes = SerializationUtil.toBytes(args[0], contentType);
     if (!methodReturnTypeMap.containsKey(method)) {
       methodReturnTypeMap.put(method, parseInferredClass(method.getGenericReturnType()));
