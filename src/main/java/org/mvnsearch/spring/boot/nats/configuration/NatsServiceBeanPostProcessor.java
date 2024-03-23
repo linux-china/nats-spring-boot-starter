@@ -1,11 +1,14 @@
 package org.mvnsearch.spring.boot.nats.configuration;
 
 import io.nats.client.Connection;
-import io.nats.service.*;
+import io.nats.client.impl.Headers;
+import io.nats.service.Group;
+import io.nats.service.Service;
+import io.nats.service.ServiceBuilder;
+import io.nats.service.ServiceEndpoint;
 import org.mvnsearch.spring.boot.nats.MessagingNats;
 import org.mvnsearch.spring.boot.nats.NatsContextAware;
 import org.mvnsearch.spring.boot.nats.annotation.NatsService;
-import org.mvnsearch.spring.boot.nats.serialization.SerializationUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -16,18 +19,17 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.core.env.Environment;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Method;
 import java.net.DatagramSocket;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class NatsServiceBeanPostProcessor implements BeanPostProcessor, DisposableBean {
   private static final Logger logger = LoggerFactory.getLogger(NatsServiceBeanPostProcessor.class);
+  private static final byte[] EMPTY_BYTES = new byte[]{};
 
   @Autowired
   @Lazy
@@ -103,19 +105,20 @@ public class NatsServiceBeanPostProcessor implements BeanPostProcessor, Disposab
           .endpointMetadata(metadata)
           .handler(msg -> {
             try {
-              Object param = msg;
-              Class<?> paramType = method.getParameterTypes()[0];
-              if (paramType == String.class) {
-                param = new String(msg.getData(), StandardCharsets.UTF_8);
-              } else if (paramType != ServiceMessage.class) {
-                param = SerializationUtil.convert(msg.getData(), paramType);
-              }
-              Object result = ReflectionUtils.invokeMethod(method, bean, param);
-              msg.respond(nc, SerializationUtil.toBytes(result));
+              messagingNats.service(msg).doOnError(e -> {
+                  String fullName = clazz.getCanonicalName() + "." + method.getName();
+                  logger.error("NATS-001500: failed to call NATS service: {}", fullName, e);
+                  Headers headers = new Headers();
+                  headers.put("error", "NATS-001500: failed to call NATS service: " + fullName);
+                  msg.respond(nc, EMPTY_BYTES, headers);
+                })
+                .subscribe();
             } catch (Exception e) {
               String fullName = clazz.getCanonicalName() + "." + method.getName();
-              logger.error("NATS-001500: failed to call NATS service: " + fullName, e);
-              msg.respond(nc, "error: " + e.getMessage());
+              logger.error("NATS-001500: failed to call NATS service: {}", fullName, e);
+              Headers headers = new Headers();
+              headers.put("error", "NATS-001500: failed to call NATS service: " + fullName);
+              msg.respond(nc, EMPTY_BYTES, headers);
             }
           })
           .build();
