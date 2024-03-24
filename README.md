@@ -213,14 +213,21 @@ instances.
 **Tips**: If you have a state with many fields, and you can use JavaBean or `record` as fields.
 Then call `nats kv put bucket online.admin '{"nick": "linux_china", "phone":"138xxx"}'` to update JavaBean state.
 
-# NATS JetStream KV
+# NATS KeyValue store
 
-[NATS Key/Value Store](https://docs.nats.io/nats-concepts/jetstream/key-value-store) is a nice feature for some cases:
+[NATS KeyValue Store](https://docs.nats.io/nats-concepts/jetstream/key-value-store) is a nice feature for some cases:
 
 * Configuration Data: watch support
 * Metadata: Data Schema, such as avro, protobuf, json schema etc under `schema-registry` bucket.
 * State data: cooperate with instances, such as rate limit, black list etc.
-* Statics Data: some data for report
+
+# NATS Object Store
+
+[NATS Key/Value Store](https://docs.nats.io/nats-concepts/jetstream/obj_store) is a nice feature for some cases:
+
+* Workload binary storage: such as Wasm module, JS bundle etc.
+* Statics Data: some data for report(short-time), such as CSV, JSON etc.
+* Callback support: watch support for bucket.
 
 # Spring Cloud Stream Binder for NATS
 
