@@ -8,6 +8,7 @@ import org.mvnsearch.spring.boot.nats.configuration.AppInstanceOnlyMessageHandle
 import org.mvnsearch.spring.boot.nats.configuration.NatsDurableBeanPostProcessor;
 import org.mvnsearch.spring.boot.nats.configuration.NatsServiceBeanPostProcessor;
 import org.mvnsearch.spring.boot.nats.configuration.NatsSubscriberAnnotationBeanPostProcessor;
+import org.mvnsearch.spring.boot.nats.core.NatsTemplate;
 import org.mvnsearch.spring.boot.nats.services.MessagingNats;
 import org.mvnsearch.spring.boot.nats.services.NatsMessageHandlerCustomizer;
 import org.mvnsearch.spring.boot.nats.services.NatsServiceMessageHandler;
@@ -27,6 +28,11 @@ import java.nio.charset.StandardCharsets;
  */
 @Configuration
 public class NatsAutoConfiguration {
+
+  @Bean
+  public NatsTemplate natsTemplate(Connection nc) {
+    return new NatsTemplate(nc);
+  }
 
   @Bean
   public MessagingNats messagingNats(Connection nc, ReactiveMessageHandler messageHandler, NatsStrategies strategies) {
