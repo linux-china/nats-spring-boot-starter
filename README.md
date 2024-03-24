@@ -81,18 +81,6 @@ Some use cases for this feature:
 * Peer-to-Peer communication: send messages to a specific instance.
 * A/B testing: send the message to a specific instance, and not broadcast to all instances.
 
-### Reactive support
-
-If you want to use Reactive style, and you can use `NatsReactive` bean, and interface as following:
-
-```java
-public interface NatsReactive {
-
-  Mono<Void> publish(String subject, byte[] body);
-
-  Flux<byte[]> subscribe(String subject);
-}
-```
 
 # NATS MicroServices framework
 
@@ -236,6 +224,14 @@ Please official Spring Cloud Stream Binder for
 NATS [nats-spring-cloud-stream-binder](https://github.com/nats-io/spring-nats).
 
 **Tips**: nats-spring-boot-starter is based on spring-nats, and you can use both of them in your project.
+
+# Spring Boot Actuator
+
+Please visit `/actuator/nats` for NATS information and statistics.
+
+* NATS Server Information
+* NATS Services
+* Nats Subscribers
 
 # References
 
