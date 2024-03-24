@@ -4,6 +4,7 @@ import io.nats.client.Dispatcher;
 import io.nats.service.InfoResponse;
 import io.nats.service.Service;
 import io.nats.spring.boot.autoconfigure.NatsProperties;
+import org.mvnsearch.spring.boot.nats.NatsContextAware;
 import org.mvnsearch.spring.boot.nats.annotation.NatsSubscriber;
 import org.mvnsearch.spring.boot.nats.configuration.NatsServiceBeanPostProcessor;
 import org.mvnsearch.spring.boot.nats.configuration.NatsSubscriberAnnotationBeanPostProcessor;
@@ -38,6 +39,7 @@ public class NatsActuatorEndpoint implements ApplicationContextAware {
     Map<String, Object> info = new HashMap<>();
     //basic info
     info.put("server", natsProperties.getServer());
+    info.put("instanceInbox", applicationContext.getBean(NatsContextAware.class).getSubjectNameForAppInstance());
     // subscribers
     final Map<NatsSubscriber, Dispatcher> subscriptions = applicationContext.getBean(NatsSubscriberAnnotationBeanPostProcessor.class).getSubscriptions();
     List<Map<String, Object>> natsSubscriptions = new ArrayList<>();
