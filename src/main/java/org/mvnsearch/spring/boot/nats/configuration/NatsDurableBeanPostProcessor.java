@@ -72,7 +72,7 @@ public class NatsDurableBeanPostProcessor implements BeanPostProcessor, Disposab
           Object param = SerializationUtil.convert(textValue, paramType, "text/plain");
           ReflectionUtils.invokeMethod(method, bean, param);
         } catch (Exception e) {
-          logger.error("NATS-010500: failed to update watched key", e);
+          logger.error("NATS-020500: failed to update watched key", e);
         }
       }
 

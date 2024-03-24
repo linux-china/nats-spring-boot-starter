@@ -110,17 +110,17 @@ public class NatsServiceBeanPostProcessor implements BeanPostProcessor, Disposab
             try {
               messagingNats.service(msg).doOnError(e -> {
                   String fullName = clazz.getCanonicalName() + "." + method.getName();
-                  logger.error("NATS-001500: failed to call NATS service: {}", fullName, e);
+                  logger.error("NATS-040500: failed to call NATS service: {}", fullName, e);
                   Headers headers = new Headers();
-                  headers.put("error", "NATS-001500: failed to call NATS service: " + fullName);
+                  headers.put("error", "NATS-040500: failed to call NATS service: " + fullName);
                   msg.respond(nc, EMPTY_BYTES, headers);
                 })
                 .subscribe();
             } catch (Exception e) {
               String fullName = clazz.getCanonicalName() + "." + method.getName();
-              logger.error("NATS-001500: failed to call NATS service: {}", fullName, e);
+              logger.error("NATS-040500: failed to call NATS service: {}", fullName, e);
               Headers headers = new Headers();
-              headers.put("error", "NATS-001500: failed to call NATS service: " + fullName);
+              headers.put("error", "NATS-040500: failed to call NATS service: " + fullName);
               msg.respond(nc, EMPTY_BYTES, headers);
             }
           })
