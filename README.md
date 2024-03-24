@@ -8,11 +8,12 @@ Spring Boot 2.x/3.x starter for NATS with Publish/Subscribe, Services Framework,
 
 NATS is very simple, why you create a starter for Spring Boot?
 
-* Nats Microservices framework support: RPC style with `json`, `protobuf`, `avro` etc. format.
-* JetStream KV watch support: durable Component and state sync between instances.
-* NATS service interface: almost alike Spring HTTP interface to make service call easy
+* Nats Microservices framework support: RPC style with `json`, `protobuf`, `avro` data format.
+* JetStream KeyValue watch support: durable Component and state sync between instances.
+* NATS service interface: almost alike Spring HTTP interface to make services call easy
 * Spring Kafka like: `@NatsSubscriber` to listen subject
 * Subject for instance only: make A/B easy
+* NatsTemplate: friendly with Spring `XxxTemplate` style
 * Metrics & endpoints: `/actuator/nats`, NATS information/statistics
 * Health indicator for NATS
 
