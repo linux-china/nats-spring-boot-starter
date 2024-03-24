@@ -236,9 +236,9 @@ Please visit `/actuator/nats` for NATS information and statistics.
 # References
 
 * NATS:  https://nats.io/
-* NATS Docs: https://nats-io.github.io/docs/
+* NATS Docs: https://docs.nats.io/
 * NATS Architecture and Design Docs: https://github.com/nats-io/nats-architecture-and-design
-* NATS Java client: https://github.com/nats-io/java-nats
+* NATS Java client: https://github.com/nats-io/nats.java
 * spring-nats: https://github.com/nats-io/spring-nats
 * Method Handles in Java: http://www.baeldung.com/java-method-handles
 * EventCatalog: Documentation tool for Event-Driven Architectures - https://www.eventcatalog.dev/
