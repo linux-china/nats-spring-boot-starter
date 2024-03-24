@@ -1,12 +1,10 @@
-package org.mvnsearch.spring.boot.nats;
+package org.mvnsearch.spring.boot.nats.services;
 
 import io.micrometer.core.instrument.Metrics;
 import io.nats.client.Connection;
 import io.nats.client.Message;
 import io.nats.client.impl.Headers;
 import io.nats.service.ServiceMessage;
-import org.mvnsearch.spring.boot.nats.services.NatsServiceReturnValueHandler;
-import org.mvnsearch.spring.boot.nats.services.NatsStrategies;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DefaultDataBuffer;
 import org.springframework.core.io.buffer.DefaultDataBufferFactory;
@@ -30,7 +28,7 @@ public class MessagingNats {
   private final RouteMatcher routeMatcher;
   private final NatsStrategies strategies;
 
-  MessagingNats(MimeType dataMimeType, Connection nc, ReactiveMessageHandler messageHandler, NatsStrategies strategies) {
+  public MessagingNats(MimeType dataMimeType, Connection nc, ReactiveMessageHandler messageHandler, NatsStrategies strategies) {
     this.dataMimeType = dataMimeType;
     this.nc = nc;
     this.messageHandler = messageHandler;

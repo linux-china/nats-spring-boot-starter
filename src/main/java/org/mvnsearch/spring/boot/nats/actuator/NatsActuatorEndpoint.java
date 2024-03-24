@@ -1,4 +1,4 @@
-package org.mvnsearch.spring.boot.nats;
+package org.mvnsearch.spring.boot.nats.actuator;
 
 import io.nats.service.InfoResponse;
 import io.nats.service.Service;

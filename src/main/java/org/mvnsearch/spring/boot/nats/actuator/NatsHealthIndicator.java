@@ -1,4 +1,4 @@
-package org.mvnsearch.spring.boot.nats;
+package org.mvnsearch.spring.boot.nats.actuator;
 
 import io.nats.client.Connection;
 import org.springframework.beans.factory.annotation.Autowired;
