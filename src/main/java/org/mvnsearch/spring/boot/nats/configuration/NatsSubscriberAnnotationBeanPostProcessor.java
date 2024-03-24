@@ -15,6 +15,7 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.core.MethodIntrospector;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.lang.NonNull;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
@@ -34,7 +35,7 @@ public class NatsSubscriberAnnotationBeanPostProcessor implements BeanPostProces
   private Connection nc;
 
   @Override
-  public void afterPropertiesSet() throws Exception {
+  public void afterPropertiesSet() {
     nc = beanFactory.getBean(Connection.class);
   }
 
@@ -48,12 +49,12 @@ public class NatsSubscriberAnnotationBeanPostProcessor implements BeanPostProces
   }
 
   @Override
-  public void setBeanFactory(BeanFactory beanFactory) {
+  public void setBeanFactory(@NonNull BeanFactory beanFactory) {
     this.beanFactory = beanFactory;
   }
 
   @Override
-  public Object postProcessAfterInitialization(final Object bean, final String beanName) throws BeansException {
+  public Object postProcessAfterInitialization(@NonNull final Object bean, @NonNull final String beanName) throws BeansException {
     Class<?> targetClass = AopUtils.getTargetClass(bean);
     Map<Method, Set<NatsSubscriber>> annotatedMethods = MethodIntrospector.selectMethods(targetClass,
       (MethodIntrospector.MetadataLookup<Set<NatsSubscriber>>) method -> {

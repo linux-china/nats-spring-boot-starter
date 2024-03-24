@@ -41,7 +41,6 @@ public class NatsServiceInvocationHandler implements InvocationHandler {
     }
   }
 
-  @SuppressWarnings("SuspiciousInvocationHandlerImplementation")
   @Override
   public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
     //interface default method validation for JDK Proxy only, not necessary for ByteBuddy

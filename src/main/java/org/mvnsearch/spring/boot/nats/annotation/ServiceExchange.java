@@ -8,5 +8,5 @@ import java.lang.annotation.*;
 public @interface ServiceExchange {
     String value() default "";
 
-    String format() default "json";
+    String format() default "application/json";
 }

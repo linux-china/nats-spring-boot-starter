@@ -10,5 +10,5 @@ public @interface NatsKeyWatcher {
 
     String bucket();
 
-    String format() default "json";
+    String format() default "application/json";
 }

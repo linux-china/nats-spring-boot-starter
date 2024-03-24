@@ -11,16 +11,16 @@ import org.springframework.boot.actuate.health.Health;
  * @author linux_china
  */
 public class NatsHealthIndicator extends AbstractHealthIndicator {
-    @Autowired
-    private Connection nc;
+  @Autowired
+  private Connection nc;
 
-    @Override
-    protected void doHealthCheck(Health.Builder builder) throws Exception {
-        try {
-            Connection.Status status = nc.getStatus();
-            builder.up().withDetail("url", nc.getConnectedUrl()).withDetail("status", status.toString());
-        } catch (Exception e) {
-            builder.down(e);
-        }
+  @Override
+  protected void doHealthCheck(Health.Builder builder) {
+    try {
+      Connection.Status status = nc.getStatus();
+      builder.up().withDetail("url", nc.getConnectedUrl()).withDetail("status", status.toString());
+    } catch (Exception e) {
+      builder.down(e);
     }
+  }
 }

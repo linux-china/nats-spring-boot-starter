@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.lang.NonNull;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Method;
@@ -31,7 +32,7 @@ public class NatsDurableBeanPostProcessor implements BeanPostProcessor, Disposab
   private final List<NatsKeyValueWatchSubscription> subscriptions = new ArrayList<>();
 
   @Override
-  public void destroy() throws Exception {
+  public void destroy() {
     for (NatsKeyValueWatchSubscription subscription : subscriptions) {
       try {
         subscription.close();
@@ -43,7 +44,7 @@ public class NatsDurableBeanPostProcessor implements BeanPostProcessor, Disposab
 
 
   @Override
-  public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+  public Object postProcessAfterInitialization(@NonNull Object bean, @NonNull String beanName) throws BeansException {
     Class<?> clazz = bean.getClass();
     NatsDurableComponent natsDurableComponent = AnnotationUtils.findAnnotation(clazz, NatsDurableComponent.class);
     if (natsDurableComponent != null) {

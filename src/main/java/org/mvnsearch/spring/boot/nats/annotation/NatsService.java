@@ -12,6 +12,6 @@ public @interface NatsService {
 
     String description();
 
-    String format() default "json";
+    String format() default "application/json";
 
 }

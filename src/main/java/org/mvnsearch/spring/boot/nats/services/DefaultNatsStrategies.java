@@ -71,10 +71,8 @@ final class DefaultNatsStrategies implements NatsStrategies {
 
     private final List<Decoder<?>> decoders = new ArrayList<>();
 
-    @Nullable
     private RouteMatcher routeMatcher;
 
-    @Nullable
     private ReactiveAdapterRegistry adapterRegistry = ReactiveAdapterRegistry.getSharedInstance();
 
     DefaultNatsStrategiesBuilder() {
