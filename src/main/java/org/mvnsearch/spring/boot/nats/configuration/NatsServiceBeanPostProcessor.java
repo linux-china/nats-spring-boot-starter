@@ -6,7 +6,7 @@ import io.nats.service.Group;
 import io.nats.service.Service;
 import io.nats.service.ServiceBuilder;
 import io.nats.service.ServiceEndpoint;
-import org.mvnsearch.spring.boot.nats.MessagingNats;
+import org.mvnsearch.spring.boot.nats.services.MessagingNats;
 import org.mvnsearch.spring.boot.nats.NatsContextAware;
 import org.mvnsearch.spring.boot.nats.annotation.NatsService;
 import org.slf4j.Logger;
