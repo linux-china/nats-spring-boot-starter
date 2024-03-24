@@ -17,10 +17,10 @@
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
     <spring-boot.version>2.7.18</spring-boot.version>
-    <jnats.version>2.17.2</jnats.version>
+    <jnats.version>2.17.3</jnats.version>
     <nats-spring.version>0.5.7</nats-spring.version>
-    <protobuf-java.version>3.25.2</protobuf-java.version>
-    <avro.version>1.11.1</avro.version>
+    <protobuf-java.version>3.25.3</protobuf-java.version>
+    <avro.version>1.11.3</avro.version>
   </properties>
 
   <developers>
