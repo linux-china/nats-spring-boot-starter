@@ -1,8 +1,6 @@
 package org.mvnsearch.spring.boot.nats.annotation;
 
 
-import org.mvnsearch.spring.boot.nats.annotation.NatsSubscribers;
-
 import java.lang.annotation.*;
 
 /**
@@ -16,7 +14,7 @@ import java.lang.annotation.*;
 @Repeatable(NatsSubscribers.class)
 public @interface NatsSubscriber {
 
-    String subject();
+  String subject();
 
-    String queueGroup() default "";
+  String queueGroup() default "";
 }
