@@ -1,14 +1,18 @@
 package org.mvnsearch.spring.boot.nats.actuator;
 
+import io.nats.client.Dispatcher;
 import io.nats.service.InfoResponse;
 import io.nats.service.Service;
 import io.nats.spring.boot.autoconfigure.NatsProperties;
+import org.mvnsearch.spring.boot.nats.annotation.NatsSubscriber;
 import org.mvnsearch.spring.boot.nats.configuration.NatsServiceBeanPostProcessor;
+import org.mvnsearch.spring.boot.nats.configuration.NatsSubscriberAnnotationBeanPostProcessor;
 import org.springframework.beans.BeansException;
 import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
 import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.lang.NonNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,14 +27,29 @@ import java.util.Map;
 @Endpoint(id = "nats")
 public class NatsActuatorEndpoint implements ApplicationContextAware {
   private ApplicationContext applicationContext;
+  private final NatsProperties natsProperties;
 
   public NatsActuatorEndpoint(NatsProperties natsProperties) {
+    this.natsProperties = natsProperties;
   }
 
   @ReadOperation
   public Map<String, Object> info() {
     Map<String, Object> info = new HashMap<>();
     List<Map<String, Object>> services = new ArrayList<>();
+    // subscribers
+    final Map<NatsSubscriber, Dispatcher> subscriptions = applicationContext.getBean(NatsSubscriberAnnotationBeanPostProcessor.class).getSubscriptions();
+    List<Map<String, Object>> natsSubscriptions = new ArrayList<>();
+    for (NatsSubscriber natsSubscriber : subscriptions.keySet()) {
+      Map<String, Object> subscriberInfo = new HashMap<>();
+      subscriberInfo.put("subject", natsSubscriber.subject());
+      if (!natsSubscriber.queueGroup().isEmpty()) {
+        subscriberInfo.put("queueGroup", natsSubscriber.queueGroup());
+      }
+      natsSubscriptions.add(subscriberInfo);
+    }
+    info.put("subscribers", natsSubscriptions);
+    // services
     final List<Service> natsServices = applicationContext.getBean(NatsServiceBeanPostProcessor.class).getNatsServices();
     for (Service natsService : natsServices) {
       Map<String, Object> serviceInfo = new HashMap<>();
@@ -48,15 +67,16 @@ public class NatsActuatorEndpoint implements ApplicationContextAware {
         endpoints.add(endpointInfo);
       }
       serviceInfo.put("endpoints", endpoints);
-
       services.add(serviceInfo);
     }
-    info.put("services", services);
+    if (!services.isEmpty()) {
+      info.put("services", services);
+    }
     return info;
   }
 
   @Override
-  public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+  public void setApplicationContext(@NonNull ApplicationContext applicationContext) throws BeansException {
     this.applicationContext = applicationContext;
   }
 }
