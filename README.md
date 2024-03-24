@@ -36,13 +36,13 @@ NATS is very simple, why you create a starter for Spring Boot?
 nats.spring.server = nats://localhost:4222
 ```
 
-* in you code, use autowired NATS Connection to send message
+* in you code, use NatsTemplate to send message
 
 ```
    @Autowired
-   private Connection nc;
+   private NatsTemplate natsTemplate;
    ...
-   nc.publish("subject1","hello".getBytes());
+   natsTemplate.publish("subject1","hello".getBytes());
 ```
 
 * @NatsSubscriber support, method signature of subscriber is `"(Message)->void"`
