@@ -36,7 +36,8 @@ public class NatsActuatorEndpoint implements ApplicationContextAware {
   @ReadOperation
   public Map<String, Object> info() {
     Map<String, Object> info = new HashMap<>();
-    List<Map<String, Object>> services = new ArrayList<>();
+    //basic info
+    info.put("server", natsProperties.getServer());
     // subscribers
     final Map<NatsSubscriber, Dispatcher> subscriptions = applicationContext.getBean(NatsSubscriberAnnotationBeanPostProcessor.class).getSubscriptions();
     List<Map<String, Object>> natsSubscriptions = new ArrayList<>();
@@ -50,6 +51,7 @@ public class NatsActuatorEndpoint implements ApplicationContextAware {
     }
     info.put("subscribers", natsSubscriptions);
     // services
+    List<Map<String, Object>> services = new ArrayList<>();
     final List<Service> natsServices = applicationContext.getBean(NatsServiceBeanPostProcessor.class).getNatsServices();
     for (Service natsService : natsServices) {
       Map<String, Object> serviceInfo = new HashMap<>();
