@@ -212,7 +212,7 @@ Then call `nats kv put bucket online.admin '{"nick": "linux_china", "phone":"138
 
 # NATS Object Store
 
-[NATS Key/Value Store](https://docs.nats.io/nats-concepts/jetstream/obj_store) is a nice feature for some cases:
+[NATS Object Store](https://docs.nats.io/nats-concepts/jetstream/obj_store) is a nice feature for some cases:
 
 * Workload binary storage: such as Wasm module, JS bundle etc.
 * Statics Data: some data for report(short-time), such as CSV, JSON etc.
