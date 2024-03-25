@@ -233,6 +233,11 @@ Please visit `/actuator/nats` for NATS information and statistics.
 * NATS Services
 * Nats Subscribers
 
+# Todo 
+
+* Data schema metadata for services: such as json schema, load schema file from classpath or annotation?
+* Graceful shutdown: call actuator endpoint to disconnect from NATS?
+  
 # References
 
 * NATS:  https://nats.io/
