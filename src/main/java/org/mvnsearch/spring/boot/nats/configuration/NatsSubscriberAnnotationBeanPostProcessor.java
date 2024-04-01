@@ -4,6 +4,7 @@ import io.nats.client.Connection;
 import io.nats.client.Dispatcher;
 import io.nats.client.Message;
 import io.nats.client.MessageHandler;
+import org.mvnsearch.spring.boot.nats.NatsDisposable;
 import org.mvnsearch.spring.boot.nats.annotation.NatsSubscriber;
 import org.mvnsearch.spring.boot.nats.annotation.NatsSubscribers;
 import org.slf4j.Logger;
@@ -28,7 +29,7 @@ import java.util.*;
  *
  * @author linux_china
  */
-public class NatsSubscriberAnnotationBeanPostProcessor implements BeanPostProcessor, Ordered, BeanFactoryAware, InitializingBean, DisposableBean {
+public class NatsSubscriberAnnotationBeanPostProcessor implements BeanPostProcessor, Ordered, BeanFactoryAware, InitializingBean, DisposableBean, NatsDisposable {
   private static final Logger log = LoggerFactory.getLogger(NatsSubscriberAnnotationBeanPostProcessor.class);
   private BeanFactory beanFactory;
   private final Map<NatsSubscriber, Dispatcher> subscriptions = new HashMap<>();

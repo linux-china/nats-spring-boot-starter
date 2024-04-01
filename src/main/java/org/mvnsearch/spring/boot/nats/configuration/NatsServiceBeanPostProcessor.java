@@ -6,6 +6,7 @@ import io.nats.service.Group;
 import io.nats.service.Service;
 import io.nats.service.ServiceBuilder;
 import io.nats.service.ServiceEndpoint;
+import org.mvnsearch.spring.boot.nats.NatsDisposable;
 import org.mvnsearch.spring.boot.nats.services.MessagingNats;
 import org.mvnsearch.spring.boot.nats.NatsContextAware;
 import org.mvnsearch.spring.boot.nats.annotation.NatsService;
@@ -28,7 +29,7 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.util.*;
 
-public class NatsServiceBeanPostProcessor implements BeanPostProcessor, DisposableBean {
+public class NatsServiceBeanPostProcessor implements BeanPostProcessor, DisposableBean, NatsDisposable {
   private static final Logger logger = LoggerFactory.getLogger(NatsServiceBeanPostProcessor.class);
   private static final byte[] EMPTY_BYTES = new byte[]{};
   @Autowired

@@ -5,6 +5,7 @@ import io.nats.client.Connection;
 import io.nats.client.api.KeyValueEntry;
 import io.nats.client.api.KeyValueWatcher;
 import io.nats.client.impl.NatsKeyValueWatchSubscription;
+import org.mvnsearch.spring.boot.nats.NatsDisposable;
 import org.mvnsearch.spring.boot.nats.annotation.NatsDurableComponent;
 import org.mvnsearch.spring.boot.nats.annotation.NatsKeyWatcher;
 import org.mvnsearch.spring.boot.nats.serialization.SerializationUtil;
@@ -23,7 +24,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NatsDurableBeanPostProcessor implements BeanPostProcessor, DisposableBean {
+public class NatsDurableBeanPostProcessor implements BeanPostProcessor, DisposableBean, NatsDisposable {
   private static final Logger logger = LoggerFactory.getLogger(NatsDurableBeanPostProcessor.class);
 
   @Autowired

@@ -6,6 +6,7 @@ import io.nats.client.Dispatcher;
 import io.nats.client.MessageHandler;
 import org.mvnsearch.spring.boot.nats.AppInstanceOnlyMessageHandler;
 import org.mvnsearch.spring.boot.nats.NatsContextAware;
+import org.mvnsearch.spring.boot.nats.NatsDisposable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -21,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class AppInstanceOnlyMessageHandlerBeanPostProcessor implements BeanPostProcessor, ApplicationContextAware, DisposableBean, NatsContextAware {
+public class AppInstanceOnlyMessageHandlerBeanPostProcessor implements BeanPostProcessor, ApplicationContextAware, DisposableBean, NatsDisposable, NatsContextAware {
   private static final Logger logger = LoggerFactory.getLogger(AppInstanceOnlyMessageHandlerBeanPostProcessor.class);
 
   @Autowired
