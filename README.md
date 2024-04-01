@@ -57,7 +57,7 @@ nats.spring.connection-name=${spring.application.name}
 ### Subject for App Instance only
 
 Every app instance will listen a subject, such as `app-name-75454360-49f0-4609-9ed9-1e3bef4219cc`(print on console),
-and you can send the messages to this subject and communicate with this instance only.
+and you can send the messages to the subject and communicate with the instance only.
 
 It's easy and simple, and you can use `AppInstanceOnlyMessageHandler` interface to handle the message.
 
@@ -213,7 +213,7 @@ Then call `nats kv put bucket online.admin '{"nick": "linux_china", "phone":"138
 
 # NATS Object Store
 
-[NATS Key/Value Store](https://docs.nats.io/nats-concepts/jetstream/obj_store) is a nice feature for some cases:
+[NATS Object Store](https://docs.nats.io/nats-concepts/jetstream/obj_store) is a nice feature for some cases:
 
 * Workload binary storage: such as Wasm module, JS bundle etc.
 * Statics Data: some data for report(short-time), such as CSV, JSON etc.
@@ -221,7 +221,7 @@ Then call `nats kv put bucket online.admin '{"nick": "linux_china", "phone":"138
 
 # Spring Cloud Stream Binder for NATS
 
-Please official Spring Cloud Stream Binder for
+Use official Spring Cloud Stream Binder for
 NATS [nats-spring-cloud-stream-binder](https://github.com/nats-io/spring-nats).
 
 **Tips**: nats-spring-boot-starter is based on spring-nats, and you can use both of them in your project.
@@ -235,6 +235,11 @@ Please visit `/actuator/nats` for NATS information and statistics.
 * Nats Subscribers
 * Disconnect from NATS: Graceful shutdown - `POST /actuator/nats/offline`
 
+# Todo 
+
+* Data schema metadata for services: such as json schema, load schema file from classpath or annotation?
+* Graceful shutdown: call actuator endpoint to disconnect from NATS?
+  
 # References
 
 * NATS:  https://nats.io/
