@@ -5,12 +5,15 @@ import io.nats.service.InfoResponse;
 import io.nats.service.Service;
 import io.nats.spring.boot.autoconfigure.NatsProperties;
 import org.mvnsearch.spring.boot.nats.NatsContextAware;
+import org.mvnsearch.spring.boot.nats.NatsDisposable;
 import org.mvnsearch.spring.boot.nats.annotation.NatsSubscriber;
 import org.mvnsearch.spring.boot.nats.configuration.NatsServiceBeanPostProcessor;
 import org.mvnsearch.spring.boot.nats.configuration.NatsSubscriberAnnotationBeanPostProcessor;
 import org.springframework.beans.BeansException;
 import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
 import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;
+import org.springframework.boot.actuate.endpoint.annotation.Selector;
+import org.springframework.boot.actuate.endpoint.annotation.WriteOperation;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.lang.NonNull;
@@ -29,6 +32,7 @@ import java.util.Map;
 public class NatsActuatorEndpoint implements ApplicationContextAware {
   private ApplicationContext applicationContext;
   private final NatsProperties natsProperties;
+  private String status = "online";
 
   public NatsActuatorEndpoint(NatsProperties natsProperties) {
     this.natsProperties = natsProperties;
@@ -62,6 +66,7 @@ public class NatsActuatorEndpoint implements ApplicationContextAware {
       serviceInfo.put("name", natsService.getName());
       serviceInfo.put("version", natsService.getVersion());
       serviceInfo.put("description", natsService.getDescription());
+      serviceInfo.put("status", status);
       List<Map<String, Object>> endpoints = new ArrayList<>();
       for (io.nats.service.Endpoint endpoint : infoResponse.getEndpoints()) {
         Map<String, Object> endpointInfo = new HashMap<>();
@@ -77,6 +82,21 @@ public class NatsActuatorEndpoint implements ApplicationContextAware {
       info.put("services", services);
     }
     return info;
+  }
+
+  @WriteOperation
+  public String operate(@Selector String action) {
+    if ("offline".equalsIgnoreCase(action) && status.equalsIgnoreCase("online")) {
+        for (NatsDisposable natsDisposable : applicationContext.getBeansOfType(NatsDisposable.class).values()) {
+          try {
+            natsDisposable.destroy();
+          } catch (Exception ignore) {
+
+          }
+        }
+        status = "offline";
+    }
+    return "success";
   }
 
   @Override
