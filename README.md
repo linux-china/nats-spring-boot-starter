@@ -233,6 +233,7 @@ Please visit `/actuator/nats` for NATS information and statistics.
 * NATS Server Information
 * NATS Services
 * Nats Subscribers
+* Disconnect from NATS: Graceful shutdown - `POST /actuator/nats/offline`
 
 # References
 
