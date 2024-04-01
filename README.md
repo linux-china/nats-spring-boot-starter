@@ -34,6 +34,7 @@ NATS is very simple, why you create a starter for Spring Boot?
 
 ```
 nats.spring.server = nats://localhost:4222
+nats.spring.connection-name=${spring.application.name}
 ```
 
 * in you code, use NatsTemplate to send message
@@ -240,5 +241,6 @@ Please visit `/actuator/nats` for NATS information and statistics.
 * NATS Architecture and Design Docs: https://github.com/nats-io/nats-architecture-and-design
 * NATS Java client: https://github.com/nats-io/nats.java
 * spring-nats: https://github.com/nats-io/spring-nats
+* Monitoring NATS: https://docs.nats.io/running-a-nats-service/nats_admin/monitoring
 * Method Handles in Java: http://www.baeldung.com/java-method-handles
 * EventCatalog: Documentation tool for Event-Driven Architectures - https://www.eventcatalog.dev/
