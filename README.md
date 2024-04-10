@@ -235,11 +235,35 @@ Please visit `/actuator/nats` for NATS information and statistics.
 * Nats Subscribers
 * Disconnect from NATS: Graceful shutdown - `POST /actuator/nats/offline`
 
-# Todo 
+# GraphQL over NATS
+
+GraphQL service interface definition.
+
+```
+public interface GraphqlService {
+
+    Mono<String> query(String query, Map<String, Object> variables);
+
+    Mono<String> mutation(String mutation, Map<String, Object> variables);
+
+    Flux<String> subscription(String subscription, Map<String, Object> variables);
+}
+```
+
+### query/mutation
+Services Framework(request-reply)
+
+### subscription
+
+* Subscribe a subject, such as "graphql.sub.xxxx"
+* Send request-reply, message with "subscribed-to" header, and the value is the subject
+* Received the replied message. If payload is ok, then you can receive the subscription message. otherwise, unsubscribe the subject.
+
+# Todo
 
 * Data schema metadata for services: such as json schema, load schema file from classpath or annotation?
 * Graceful shutdown: call actuator endpoint to disconnect from NATS?
-  
+
 # References
 
 * NATS:  https://nats.io/
