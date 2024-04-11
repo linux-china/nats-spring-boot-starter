@@ -16,6 +16,7 @@ NATS is very simple, why you create a starter for Spring Boot?
 * NatsTemplate: friendly with Spring `XxxTemplate` style
 * Metrics & endpoints: `/actuator/nats`, NATS information/statistics
 * Health indicator for NATS
+* NATS Protocol Binding for CloudEvents
 
 # Get Started with Publish/Subscribe
 
@@ -234,6 +235,10 @@ Please visit `/actuator/nats` for NATS information and statistics.
 * NATS Services
 * Nats Subscribers
 * Disconnect from NATS: Graceful shutdown - `POST /actuator/nats/offline`
+
+# NATS Protocol Binding for CloudEvents
+
+Please refer [NATS Protocol Binding for CloudEvents](https://github.com/cloudevents/spec/blob/main/cloudevents/bindings/nats-protocol-binding.md).
 
 # GraphQL over NATS
 
