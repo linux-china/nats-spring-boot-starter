@@ -25,6 +25,7 @@
     <nats-spring.version>0.5.7</nats-spring.version>
     <protobuf-java.version>3.25.3</protobuf-java.version>
     <avro.version>1.11.3</avro.version>
+    <cloudevents-sdk.version>3.0.0</cloudevents-sdk.version>
   </properties>
 
   <developers>
@@ -97,7 +98,12 @@
     <dependency>
       <groupId>io.cloudevents</groupId>
       <artifactId>cloudevents-core</artifactId>
-      <version>3.0.0</version>
+      <version>${cloudevents-sdk.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.cloudevents</groupId>
+      <artifactId>cloudevents-json-jackson</artifactId>
+      <version>${cloudevents-sdk.version}</version>
     </dependency>
     <!--protobuf-->
     <dependency>
