@@ -16,6 +16,7 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.core.env.Environment;
 import org.springframework.lang.NonNull;
 
 import java.util.ArrayList;
@@ -33,8 +34,13 @@ public class AppInstanceOnlyMessageHandlerBeanPostProcessor implements BeanPostP
 
   @Override
   public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-    String appName = applicationContext.getEnvironment().getProperty("spring.application.name", "unknown");
-    instanceSubjectName = appName + "-" + UUID.randomUUID();
+    final Environment env = applicationContext.getEnvironment();
+    String connectionName = env.getProperty("nats.spring.connection-name", env.getProperty("spring.application.name", "unknown"));
+    if (connectionName.length() > 36 && connectionName.substring(connectionName.length() - 36).matches("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}")) {
+      instanceSubjectName = connectionName;
+    } else {
+      instanceSubjectName = connectionName + "-" + UUID.randomUUID();
+    }
     logger.info("NATS-020001: application instance subject name: {}", instanceSubjectName);
   }
 
