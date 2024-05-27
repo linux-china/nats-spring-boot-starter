@@ -242,6 +242,15 @@ Please refer [NATS Protocol Binding for CloudEvents](https://github.com/cloudeve
 
 NATS Message's `Content-Type` header value: `application/cloudevents+json`。
 
+Convert NATS Message to CloudEvent:
+
+```
+    EventFormat format = EventFormatProvider.getInstance().resolveFormat(JsonFormat.CONTENT_TYPE);
+    if (msg.getHeaders().getFirst("Content-Type").equals(format.serializedContentType())) {
+       final CloudEvent cloudEvent = format.deserialize(msg.getData());
+    }
+```
+
 # GraphQL over NATS
 
 GraphQL service interface definition.
