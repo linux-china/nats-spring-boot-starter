@@ -240,6 +240,8 @@ Please visit `/actuator/nats` for NATS information and statistics.
 
 Please refer [NATS Protocol Binding for CloudEvents](https://github.com/cloudevents/spec/blob/main/cloudevents/bindings/nats-protocol-binding.md).
 
+NATS Message's `Content-Type` header value: `application/cloudevents+json`。
+
 # GraphQL over NATS
 
 GraphQL service interface definition.
