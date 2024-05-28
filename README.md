@@ -35,7 +35,7 @@ NATS is very simple, why you create a starter for Spring Boot?
 
 ```
 nats.spring.server = nats://localhost:4222
-nats.spring.connection-name=${spring.application.name}-${random.uuid}
+nats.spring.connection-name=${spring.application.name}.${random.uuid}
 ```
 
 * in you code, use NatsTemplate to send message
