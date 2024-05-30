@@ -12,7 +12,7 @@ NATS is very simple, why you create a starter for Spring Boot?
 * JetStream KeyValue watch support: durable Component and state sync between instances.
 * NATS service interface: almost alike Spring HTTP interface to make services call easy
 * Spring Kafka like: `@NatsSubscriber` to listen subject
-* Subject for instance only: make A/B easy
+* Subject(UUID) for instance only: make A/B easy
 * NatsTemplate: friendly with Spring `XxxTemplate` style
 * Metrics & endpoints: `/actuator/nats`, NATS information/statistics
 * Health indicator for NATS
@@ -27,7 +27,7 @@ NATS is very simple, why you create a starter for Spring Boot?
 <dependency>
   <groupId>org.mvnsearch</groupId>
   <artifactId>nats-spring-boot-starter</artifactId>
-  <version>0.1.1</version>
+  <version>0.1.2</version>
 </dependency>
 ```
 
