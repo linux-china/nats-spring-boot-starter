@@ -36,10 +36,14 @@ public class AppInstanceOnlyMessageHandlerBeanPostProcessor implements BeanPostP
   public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
     final Environment env = applicationContext.getEnvironment();
     String connectionName = env.getProperty("nats.spring.connection-name", env.getProperty("spring.application.name", "unknown"));
-    if (connectionName.length() > 36 && connectionName.substring(connectionName.length() - 36).matches("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}")) {
-      instanceSubjectName = connectionName;
-    } else {
-      instanceSubjectName = connectionName + "-" + UUID.randomUUID();
+    if (connectionName.length() > 36) {
+      final String part = connectionName.substring(connectionName.length() - 36);
+      if (part.matches("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}")) {
+        instanceSubjectName = part;
+      }
+    }
+    if (instanceSubjectName == null) {
+      instanceSubjectName = UUID.randomUUID().toString();
     }
     logger.info("NATS-020001: application instance subject name: {}", instanceSubjectName);
   }
