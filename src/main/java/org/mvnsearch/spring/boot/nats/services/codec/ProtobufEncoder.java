@@ -16,7 +16,11 @@ import java.util.Map;
 public class ProtobufEncoder extends AbstractEncoder<MessageLite> {
 
   public ProtobufEncoder() {
-    super(new MimeType("application", "protobuf"));
+    super(
+      new MimeType("application", "protobuf"),
+      new MimeType("application", "x-protobuf"),
+      new MimeType("application", "vnd.google.protobuf")
+    );
   }
 
   @Override

@@ -1,25 +1,25 @@
 package org.mvnsearch.spring.boot.nats.services.codec;
 
 import com.google.protobuf.MessageLite;
-import org.reactivestreams.Publisher;
 import org.springframework.core.ResolvableType;
 import org.springframework.core.codec.AbstractDataBufferDecoder;
-import org.springframework.core.codec.AbstractDecoder;
 import org.springframework.core.codec.DecodingException;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.util.MimeType;
-import reactor.core.publisher.Flux;
 
 import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
-import java.util.List;
 import java.util.Map;
 
 public class ProtobufDecoder extends AbstractDataBufferDecoder<MessageLite> {
 
 
   public ProtobufDecoder() {
-    super(new MimeType("application", "protobuf"));
+    super(
+      new MimeType("application", "protobuf"),
+      new MimeType("application", "x-protobuf"),
+      new MimeType("application", "vnd.google.protobuf")
+    );
   }
 
   @Override
