@@ -177,6 +177,13 @@ The following content types are supported:
 * Protobuf(application/protobuf): https://developers.google.com/protocol-buffers/
 * Avro(application/avro): https://avro.apache.org/ friendly with Kafka Schema
 
+If you choose Protobuf, and it's better to add `content-type` and `message-type` headers in NATS message.
+
+```
+content-type: application/x-protobuf
+message-type: org.mvnsearch.User
+```
+
 # Durable Component
 
 Durable component is almost like [Cloudflare Durable Objects](https://developers.cloudflare.com/durable-objects/),
