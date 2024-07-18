@@ -88,7 +88,9 @@ public class MessagingNats {
     }
     // routing
     headers.setHeader("subject", serviceMessage.getSubject());
-    headers.setHeader("reply-to", serviceMessage.getReplyTo());
+    if (serviceMessage.getReplyTo() != null) {
+      headers.setHeader("reply-to", serviceMessage.getReplyTo());
+    }
     RouteMatcher.Route route = this.routeMatcher.parseRoute(serviceMessage.getSubject());
     headers.setHeader(DestinationPatternsMessageCondition.LOOKUP_DESTINATION_HEADER, route);
     headers.setLeaveMutable(true);
