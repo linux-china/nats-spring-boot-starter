@@ -174,7 +174,7 @@ public interface UserService {
 The following content types are supported:
 
 * Jackson(application/json):  https://github.com/FasterXML/jackson
-* Protobuf(application/protobuf): https://developers.google.com/protocol-buffers/
+* Protobuf(application/x-protobuf): https://developers.google.com/protocol-buffers/
 * Avro(application/avro): https://avro.apache.org/ friendly with Kafka Schema
 
 If you choose Protobuf, and it's better to add `content-type` and `message-type` headers in NATS message.
