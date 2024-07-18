@@ -21,11 +21,11 @@
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
     <spring-boot.version>2.7.18</spring-boot.version>
-    <jnats.version>2.18.1</jnats.version>
+    <jnats.version>2.19.1</jnats.version>
     <nats-spring.version>0.5.7</nats-spring.version>
     <protobuf-java.version>3.25.3</protobuf-java.version>
     <avro.version>1.11.3</avro.version>
-    <cloudevents-sdk.version>3.0.0</cloudevents-sdk.version>
+    <cloudevents-sdk.version>4.0.1</cloudevents-sdk.version>
   </properties>
 
   <developers>
@@ -98,12 +98,14 @@
     <dependency>
       <groupId>io.cloudevents</groupId>
       <artifactId>cloudevents-core</artifactId>
-      <version>${cloudevents-sdk.version}</version>
     </dependency>
     <dependency>
       <groupId>io.cloudevents</groupId>
       <artifactId>cloudevents-json-jackson</artifactId>
-      <version>${cloudevents-sdk.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.cloudevents</groupId>
+      <artifactId>cloudevents-protobuf</artifactId>
     </dependency>
     <!--protobuf-->
     <dependency>
@@ -144,7 +146,7 @@
       <dependency>
         <groupId>org.junit</groupId>
         <artifactId>junit-bom</artifactId>
-        <version>5.10.2</version>
+        <version>5.10.3</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -152,6 +154,13 @@
         <groupId>com.google.protobuf</groupId>
         <artifactId>protobuf-bom</artifactId>
         <version>${protobuf-java.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>io.cloudevents</groupId>
+        <artifactId>cloudevents-bom</artifactId>
+        <version>${cloudevents-sdk.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
