@@ -27,7 +27,7 @@ NATS is very simple, why you create a starter for Spring Boot?
 <dependency>
   <groupId>org.mvnsearch</groupId>
   <artifactId>nats-spring-boot-starter</artifactId>
-  <version>0.1.1</version>
+  <version>0.2.0</version>
 </dependency>
 ```
 
