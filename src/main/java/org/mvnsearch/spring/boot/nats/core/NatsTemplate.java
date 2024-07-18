@@ -1,5 +1,6 @@
 package org.mvnsearch.spring.boot.nats.core;
 
+import com.google.protobuf.AbstractMessage;
 import io.nats.client.*;
 import io.nats.client.api.ObjectInfo;
 import io.nats.client.api.ObjectMeta;
@@ -37,7 +38,15 @@ public class NatsTemplate implements NatsOperations {
   }
 
   @Override
-  public void publish(@NonNull String subject, Map<String, String> headers, byte[] body) {
+  public void publish(@NonNull String subject, AbstractMessage message) {
+    Headers msgHeaders = new Headers();
+    msgHeaders.add("content-type", "application/x-protobuf");
+    msgHeaders.add("message-type", message.getDescriptorForType().getFullName());
+    nc.publish(subject, msgHeaders, message.toByteArray());
+  }
+
+  @Override
+  public void publish(@NonNull String subject, @NonNull Map<String, String> headers, byte[] body) {
     Headers msgHeaders = new Headers();
     headers.forEach(msgHeaders::put);
     nc.publish(subject, msgHeaders, body);
@@ -46,6 +55,14 @@ public class NatsTemplate implements NatsOperations {
   @Override
   public void requestReply(@NonNull String subject, @NonNull String replyTo, byte[] body) {
     nc.publish(subject, replyTo, body);
+  }
+
+  @Override
+  public void requestReply(@NonNull String subject, @NonNull String replyTo, AbstractMessage message) {
+    Headers msgHeaders = new Headers();
+    msgHeaders.add("content-type", "application/x-protobuf");
+    msgHeaders.add("message-type", message.getDescriptorForType().getFullName());
+    nc.publish(subject, replyTo, msgHeaders, message.toByteArray());
   }
 
   @Override
