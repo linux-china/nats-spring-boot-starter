@@ -14,7 +14,7 @@ public class OnlineUserComponent {
 
     @NatsKeyWatcher(bucket = "bucket", key = "online.user.count")
     public void setOnlineUserCount(int count) {
-        logger.info("Online user count: " + count);
+      logger.info("Online user count: {}", count);
         this.onlineUserCount = count;
     }
 }
