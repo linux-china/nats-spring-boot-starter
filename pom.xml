@@ -21,9 +21,9 @@
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
     <spring-boot.version>2.7.18</spring-boot.version>
-    <jnats.version>2.20.2</jnats.version>
+    <jnats.version>2.20.4</jnats.version>
     <nats-spring.version>0.5.7</nats-spring.version>
-    <protobuf-java.version>3.25.4</protobuf-java.version>
+    <protobuf-java.version>3.25.5</protobuf-java.version>
     <avro.version>1.12.0</avro.version>
     <cloudevents-sdk.version>4.0.1</cloudevents-sdk.version>
   </properties>
@@ -146,7 +146,7 @@
       <dependency>
         <groupId>org.junit</groupId>
         <artifactId>junit-bom</artifactId>
-        <version>5.11.0</version>
+        <version>5.11.3</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
