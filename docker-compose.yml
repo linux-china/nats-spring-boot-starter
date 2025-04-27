@@ -1,7 +1,7 @@
 version: "3"
 services:
   nats:
-    image: nats:2.10.22-alpine
+    image: nats:2.11.2-alpine3.21
     ports:
       - "4222:4222"
       - "6222:6222"
