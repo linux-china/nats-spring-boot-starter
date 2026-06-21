@@ -1,12 +1,12 @@
 Spring Boot Starter NATS
 ===========================
-Spring Boot 2.x/3.x starter for NATS with Publish/Subscribe, Services Framework, JetStream KV watch support.
+Spring Boot 2.x/3.x/4.x starter for NATS with Publish/Subscribe, Services Framework, JetStream KV watch support.
 
 ![architecture](architecture.png)
 
 # Why Spring Boot starter for NATS?
 
-NATS is very simple already, why do you create a starter for Spring Boot?
+NATS is basic already, why do you create a starter for Spring Boot?
 
 * Nats Microservices framework support: RPC style with `json`, `protobuf`, `avro` data format.
 * JetStream KeyValue watch support: durable Component and state sync between instances.
@@ -299,3 +299,5 @@ Services Framework(request-reply)
 * Monitoring NATS: https://docs.nats.io/running-a-nats-service/nats_admin/monitoring
 * Method Handles in Java: http://www.baeldung.com/java-method-handles
 * EventCatalog: Documentation tool for Event-Driven Architectures - https://www.eventcatalog.dev/
+* Rqueue: Job Queue and Scheduler for Spring and Spring Boot - https://github.com/sonus21/rqueue
+
