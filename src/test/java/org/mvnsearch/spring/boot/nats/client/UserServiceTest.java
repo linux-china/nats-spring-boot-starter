@@ -5,22 +5,16 @@ import io.nats.client.Nats;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.mvnsearch.spring.boot.nats.demo.NatsDemoApplication;
 import org.mvnsearch.spring.boot.nats.model.User;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
+@SpringBootTest(classes = NatsDemoApplication.class)
 public class UserServiceTest {
-  private static Connection nc;
-  private static UserService userService;
 
-  @BeforeAll
-  public static void setUp() throws Exception {
-    nc = Nats.connect("nats://localhost:4222");
-    userService = NatsExchangeProxyFactory.buildStub(nc, UserService.class);
-  }
-
-  @AfterAll
-  public static void tearDown() throws Exception {
-    nc.close();
-  }
+  @Autowired
+  UserService userService;
 
   @Test
   public void testHello() throws Exception {
