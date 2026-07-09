@@ -10,6 +10,7 @@ import org.mvnsearch.spring.boot.nats.NatsDisposable;
 import org.mvnsearch.spring.boot.nats.services.MessagingNats;
 import org.mvnsearch.spring.boot.nats.NatsContextAware;
 import org.mvnsearch.spring.boot.nats.annotation.NatsService;
+import org.mvnsearch.spring.boot.nats.utils.NatsHeaderEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -114,7 +115,10 @@ public class NatsServiceBeanPostProcessor implements BeanPostProcessor, Disposab
                   String fullName = clazz.getCanonicalName() + "." + method.getName();
                   logger.error("NATS-040500: failed to call NATS service: {}", fullName, e);
                   Headers headers = new Headers();
-                  headers.put("error", "NATS-040500: failed to call NATS service: " + fullName);
+                  String err = "\r\nRoot cause: \r\n" + e.toString();
+                  err = NatsHeaderEncoder.encode(err);
+                  headers.put("error", "NATS-040500: failed to call NATS service: " + fullName +
+                          err);
                   msg.respond(nc, EMPTY_BYTES, headers);
                 })
                 .subscribe();
