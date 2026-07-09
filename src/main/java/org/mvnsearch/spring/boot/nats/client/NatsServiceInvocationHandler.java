@@ -7,6 +7,7 @@ import org.mvnsearch.spring.boot.nats.annotation.MessagingExchange;
 import org.mvnsearch.spring.boot.nats.annotation.NatsExchange;
 import org.mvnsearch.spring.boot.nats.annotation.ServiceExchange;
 import org.mvnsearch.spring.boot.nats.serialization.SerializationUtil;
+import org.mvnsearch.spring.boot.nats.utils.NatsHeaderEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.AnnotationUtils;
@@ -67,7 +68,9 @@ public class NatsServiceInvocationHandler implements InvocationHandler {
         byte[] bytes = msg.getData();
         final Headers headers = msg.getHeaders();
         if (headers != null && headers.containsKey("error")) {
-          sink.error(new Exception(headers.getFirst("error")));
+          String error = headers.getFirst("error");
+          error = NatsHeaderEncoder.decode(error);
+          sink.error(new Exception(error));
         } else if (bytes == null || bytes.length == 0) { // return value(Mono) is empty
           sink.complete();
         } else {
